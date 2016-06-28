@@ -1,6 +1,6 @@
 # webpack-project
 
-1. Data structure
+### Data structure
 
 .  
 ├── app (app folder)  
@@ -13,10 +13,12 @@
 └──  dist
 
 
-2. Useage
+### Useage
 
+```bash
 node webpack/webpack.js -h  
 
 ex:  
 node webpack/webpack.js develop {app name}  
 node webpack/webpack.js deploy {app name}  
+```
