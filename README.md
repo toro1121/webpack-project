@@ -3,7 +3,7 @@
 
  ├ - - app (app folder)  
  ├ - - webpack  
- | ├ - - config (webpack configure file)  
+  | ├ - - config (webpack configure file)  
  | | ├ - - base.js  
  | | ├ - - develop.js  
  | | ├ - - deploy.js
