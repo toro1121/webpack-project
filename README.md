@@ -1,14 +1,14 @@
 # webpack-project
 1. Data structure
 
-├ - - app (app folder)  
-├ - - webpack  
-| ├ - - config (webpack configure file)  
-| | ├ - - base.js  
-| | ├ - - develop.js  
-| | ├ - - deploy.js
-| ├ - - command
-├ - - dist
+ ├ - - app (app folder)  
+ ├ - - webpack  
+ | ├ - - config (webpack configure file)  
+ | | ├ - - base.js  
+ | | ├ - - develop.js  
+ | | ├ - - deploy.js
+ | ├ - - command
+ ├ - - dist
 
 2. Useage
 
