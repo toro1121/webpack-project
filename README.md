@@ -2,6 +2,7 @@
 
 ### Data structure
 
+```
 .  
 ├── app (app folder)  
 ├── webpack  
@@ -11,7 +12,7 @@
 │   │   └── deploy.js  
 │   └── command  
 └──  dist
-
+```
 
 ### Useage
 
