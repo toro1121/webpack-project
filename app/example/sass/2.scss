@@ -1,0 +1,30 @@
+@charset 'UTF-8';
+.example2 {
+    width: 400px;
+    height: 500px;
+    overflow: hidden;
+    line-height: 30px;
+    .spacer {
+        height: calc(100% - 200px);
+        width: 0px;
+        float: right;
+    }
+    .img {
+        width: 200px;
+        height: 200px;
+        background-color: #ccc;
+        float: right;
+        clear: right;
+    }
+    /* 不規則形狀 */
+    .cornered {
+        background: #000;
+        display: inline-block;
+        height: 300px;
+        width: 500px;
+        margin-top: 100px;
+        transform: skew(-8deg, 0);
+        position: absolute;
+        top: 500px;
+    }
+}

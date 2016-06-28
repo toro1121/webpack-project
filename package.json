@@ -1,0 +1,61 @@
+{
+  "name": "webpack-leo",
+  "version": "0.1.0",
+  "description": "webpack example",
+  "author": "Leo Lee",
+  "license": "MIT",
+  "repository": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./webpack/webpack.js"
+  },
+  "bin": {
+    "wpl": "./webpack/webpack.js"
+  },
+  "devDependencies": {
+    "async": "*",
+    "autoprefixer": "*",
+    "babel-core": "*",
+    "babel-loader": "*",
+    "babel-preset-es2015": "*",
+    "babel-preset-react": "*",
+    "colors": "*",
+    "css-loader": "*",
+    "cssnano": "*",
+    "extract-text-webpack-plugin": "*",
+    "file-loader": "*",
+    "html-loader": "*",
+    "html-webpack-plugin": "*",
+    "node-sass": "*",
+    "object-assign": "*",
+    "optimist": "*",
+    "optimize-css-assets-webpack-plugin": "*",
+    "postcss-loader": "*",
+    "prompt": "^1.0.0",
+    "react-hot-loader": "*",
+    "sass-loader": "*",
+    "style-loader": "*",
+    "susy": "*",
+    "url-loader": "*",
+    "webpack": "*",
+    "webpack-dev-server": "*"
+  },
+  "dependencies": {
+    "bootstrap-sass": "*",
+    "css-toggle-switch": "*",
+    "fancybox": "*",
+    "flux": "*",
+    "font-awesome": "*",
+    "history": "*",
+    "jquery": "*",
+    "jquery-easing": "0.0.1",
+    "jquery-ui": "*",
+    "jquery.dotdotdot": "*",
+    "jquery.easing": "*",
+    "keymirror": "*",
+    "react": "*",
+    "react-addons-update": "*",
+    "react-dom": "*",
+    "react-router": "*"
+  }
+}
