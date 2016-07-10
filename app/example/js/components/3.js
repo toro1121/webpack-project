@@ -11,7 +11,6 @@ export default class extends React.Component {
             <div className="example3">
             	<header className="header"></header>
             	<div className="product">
-            		<div className
             	</div>
         	</div>
         );

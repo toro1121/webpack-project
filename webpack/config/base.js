@@ -36,26 +36,17 @@ module.exports = {
                 include: [
                     new RegExp(_CONFIG._DIR_NODE),
                     new RegExp(_CONFIG._DIR_BOWER),
-                    new RegExp(_CONFIG._DIR_APP + '/vendor/')
+                    new RegExp(_CONFIG._DIR_VENDOR)
                 ]
             },
             // js
             {
                 test: /\.jsx?$/,
-                loader: 'react-hot',
+                loader: 'react-hot!babel?presets[]=es2015&presets[]=react',
                 exclude: [
                     new RegExp(_CONFIG._DIR_NODE),
                     new RegExp(_CONFIG._DIR_BOWER)
                 ]
-            }, {
-                test: /\.jsx?$/,
-                loader: 'babel',
-                include: [
-                    new RegExp(_CONFIG._DIR_APP + '/js')
-                ],
-                query: {
-                    presets: ['es2015', 'react'],
-                }
             },
             // image
             {
@@ -64,7 +55,7 @@ module.exports = {
                 include: [
                     new RegExp(_CONFIG._DIR_NODE),
                     new RegExp(_CONFIG._DIR_BOWER),
-                    new RegExp(_CONFIG._DIR_APP + '/vendor/')
+                    new RegExp(_CONFIG._DIR_VENDOR)
                 ],
                 query: {
                     limit: _CONFIG._FILE_LIMIT,
@@ -76,7 +67,7 @@ module.exports = {
                 exclude: [
                     new RegExp(_CONFIG._DIR_NODE),
                     new RegExp(_CONFIG._DIR_BOWER),
-                    new RegExp(_CONFIG._DIR_APP + '/vendor/')
+                    new RegExp(_CONFIG._DIR_VENDOR)
                 ],
                 query: {
                     limit: _CONFIG._FILE_LIMIT,
@@ -90,7 +81,7 @@ module.exports = {
                 include: [
                     new RegExp(_CONFIG._DIR_NODE),
                     new RegExp(_CONFIG._DIR_BOWER),
-                    new RegExp(_CONFIG._DIR_APP + '/vendor/')
+                    new RegExp(_CONFIG._DIR_VENDOR)
                 ],
                 query: {
                     limit: _CONFIG._FILE_LIMIT,
@@ -104,7 +95,7 @@ module.exports = {
                 include: [
                     new RegExp(_CONFIG._DIR_NODE),
                     new RegExp(_CONFIG._DIR_BOWER),
-                    new RegExp(_CONFIG._DIR_APP + '/vendor/')
+                    new RegExp(_CONFIG._DIR_VENDOR)
                 ],
                 query: {
                     limit: 9999999999
@@ -115,7 +106,7 @@ module.exports = {
                 exclude: [
                     new RegExp(_CONFIG._DIR_NODE),
                     new RegExp(_CONFIG._DIR_BOWER),
-                    new RegExp(_CONFIG._DIR_APP + '/vendor/')
+                    new RegExp(_CONFIG._DIR_VENDOR)
                 ],
                 query: {
                     limit: _CONFIG._FILE_LIMIT,

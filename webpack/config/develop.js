@@ -22,16 +22,18 @@ module.exports = function() {
     o.module.loaders.push({
         test: /\.s(a|c)ss$/,
         loader: 'style!css?sourceMap!postcss!sass?sourceMap',
-        include: [
-            new RegExp(_CONFIG._DIR_APP + '/sass'),
-            new RegExp(_CONFIG._DIR_APP + '/css')
+        exclude: [
+            new RegExp(_CONFIG._DIR_NODE),
+            new RegExp(_CONFIG._DIR_BOWER),
+            new RegExp(_CONFIG._DIR_VENDOR)
         ]
     }, {
         test: /\.css$/,
         loader: 'style!css?sourceMap!postcss',
-        include: [
-            new RegExp(_CONFIG._DIR_APP + '/sass'),
-            new RegExp(_CONFIG._DIR_APP + '/css')
+        exclude: [
+            new RegExp(_CONFIG._DIR_NODE),
+            new RegExp(_CONFIG._DIR_BOWER),
+            new RegExp(_CONFIG._DIR_VENDOR)
         ]
     });
 

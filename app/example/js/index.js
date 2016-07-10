@@ -3,16 +3,11 @@ import ReactDOM from 'react-dom';
 import {
     Router,
     Route,
-    IndexRoute
+    IndexRoute,
+    hashHistory
 }
 from 'react-router';
-import createHistory from 'history/lib/createHashHistory';
-
 import '../sass/main';
-
-const history = createHistory({
-    queryKey: false
-});
 
 class App extends React.Component {
     constructor(props) {
@@ -33,7 +28,7 @@ import Example3 from './components/3';
 
 
 ReactDOM.render((
-    <Router history={history}>
+    <Router history={hashHistory}>
         <Route path="/" component={App}>
             <Route path="example1" component={Example1} />
             <Route path="example2" component={Example2} />

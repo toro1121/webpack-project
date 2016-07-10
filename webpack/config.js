@@ -12,8 +12,11 @@ module.exports = {
 
     _DIR_BASE: baseDir,
     _DIR_APP: baseDir + '/app' + (global._CONFIG._APP ? '/' + global._CONFIG._APP : ''),
-    _DIR_NODE: baseDir + '/node_modules',
-    _DIR_BOWER: baseDir + '/bower_components',
+    // _DIR_NODE: baseDir + '/node_modules',
+    // _DIR_BOWER: baseDir + '/bower_components',
+    _DIR_NODE: 'node_modules',
+    _DIR_BOWER: 'bower_components',
+    _DIR_VENDOR: 'vendor',
 
     _FILE_LIMIT: 500
 };
