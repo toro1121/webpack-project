@@ -1,14 +1,21 @@
-var React = require('react');
-var ReactRouter = require('react-router');
-var Link = ReactRouter.Link;
+import React from "react";
+import { Link } from "react-router";
+// store
+import ClientStore from "../../stores/ClientStore";
+import CompanyStore from "../../stores/CompanyStore";
 
-module.exports = React.createClass({
-    render: function() {
-        var data = this.props.location.pathname.split(/\//).splice(1);
-        var tmp = [];
-        var title = '';
+export default class extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.isNotFound = this.isNotFound.bind(this);
+    }
+    render() {
+        let data = this.props.location.pathname.split(/\//).splice(1);
+        let tmp = [];
+        let title = "";
         if (!this.isNotFound()) {
-            data.map(function(value, key) {
+            data.map((value, key) => {
                 if (!value.match(/^\d+$/)) {
                     tmp[key] = {
                         path: this.generatePath(data, key),
@@ -17,94 +24,94 @@ module.exports = React.createClass({
                         link: true
                     };
                     switch (value) {
-                        case 'main':
-                            tmp[key].name = '首頁';
+                        case "main":
+                            tmp[key].name = "首頁";
                             break;
-                        case 'profile':
-                            tmp[key].name = '帳號';
+                        case "profile":
+                            tmp[key].name = "帳號";
                             break;
-                        case 'company':
-                            tmp[key].name = '公司';
+                        case "company":
+                            tmp[key].name = "公司";
                             if (data.length > 2 && data[key + 1].match(/page/)) {
-                                data.splice(key + 1, 1, 'companyPage');
+                                data.splice(key + 1, 1, "companyPage");
                             }
                             break;
-                        case 'companyPage':
-                            tmp[key].name = require('../../stores/CompanyStore').getDataById(data[key + 1])[0].name;
+                        case "companyPage":
+                            tmp[key].name = CompanyStore.getDataById(data[key + 1])[0].name;
                             break;
-                        case 'client':
-                            tmp[key].name = '客戶';
+                        case "client":
+                            tmp[key].name = "客戶";
                             if (data.length > 2 && data[key + 1].match(/page/)) {
-                                data.splice(key + 1, 1, 'clientPage');
+                                data.splice(key + 1, 1, "clientPage");
                             }
                             break;
-                        case 'clientPage':
-                            tmp[key].name = require('../../stores/ClientStore').getDataById(data[key + 1])[0].name;
+                        case "clientPage":
+                            tmp[key].name = ClientStore.getDataById(data[key + 1])[0].name;
                             break;
-                        case 'tag':
-                            tmp[key].name = '標籤';
+                        case "tag":
+                            tmp[key].name = "標籤";
                             if (data.length > 2) {
-                                tmp[key].pathname = 'tagGroup';
+                                tmp[key].pathname = "tagGroup";
                                 if (!data[key + 1].match(/add|edit/)) {
-                                    data.splice(key + 1, 1, 'tagItem_' + data[key + 1]);
+                                    data.splice(key + 1, 1, "tagItem_" + data[key + 1]);
                                 }
                             }
                             break;
-                        case 'industry':
-                            tmp[key].name = '產業';
+                        case "industry":
+                            tmp[key].name = "產業";
                             tmp[key].params = 1;
                             break;
-                        case 'career':
-                            tmp[key].name = '職業';
+                        case "career":
+                            tmp[key].name = "職業";
                             tmp[key].params = 2;
                             break;
-                        case 'add':
-                            tmp[key].name = '新增';
+                        case "add":
+                            tmp[key].name = "新增";
                             break;
-                        case 'edit':
-                            tmp[key].name = '編輯';
+                        case "edit":
+                            tmp[key].name = "編輯";
                             break;
                     }
                     if (value.match(/tagItem\_\d*/)) {
-                        var v = value.split(/\_/);
+                        let v = value.split(/\_/);
                         tmp[key].pathname = v[0];
                         tmp[key].params = v[1];
-                        tmp[key].name = '子標籤';
+                        tmp[key].name = "子標籤";
                     }
                     if (key == 1) {
-                        tmp[key].name += '管理';
+                        tmp[key].name += "管理";
                         title = tmp[key].name;
                     }
                 }
-            }.bind(this));
+            });
         }
 
-        var i = 0;
-        var sitemap = tmp.map(function(value, key) {
+        let i = 0;
+        let sitemap = tmp.map((value, key) => {
             i++;
             if (i == tmp.length) {
                 return (
                     <li key={key}>
-                        {value.pathname == 'main' ? <i className="glyphicon glyphicon-home"></i> : ''}
-                        {value.name}
-                    </li>
+                    {value.pathname == "main" ? <i className="glyphicon glyphicon-home"></i> : ""}
+                    {value.name}
+                </li>
                 );
             } else {
                 if (value.link) {
                     return (
                         <li key={key}>
-                            <Link to={value.path + (value.params ? '/' + value.params : '')}>
-                                {value.pathname == 'main' ? <i className="glyphicon glyphicon-home"></i> : ''}
-                                {value.name}
-                            </Link>
-                        </li>
+                        <Link to={value.path + (value.params ? "/" + value.params : "")}>
+                            {value.pathname == "main" ? <i className="glyphicon glyphicon-home"></i> : ""}
+                            {value.name}
+                        </Link>
+                    </li>
                     );
                 } else {
                     return (
                         <li key={key}>
-                            {value.pathname == 'main' ? <i className="glyphicon glyphicon-home"></i> : ''}
-                            {value.name}
-                        </li>
+                        {value.pathname == "main" ? <i className="glyphicon glyphicon-home"></i> : ""}
+                        {value.name}
+                    </li>
                     );
                 }
             }
@@ -121,38 +128,38 @@ module.exports = React.createClass({
                 </ol>
             </section>
         );
-    },
+    }
     //判斷是否為404頁面
-    isNotFound: function() {
-        var isNotFound = false;
-        this.props.routes.map(function(value, key) {
+    isNotFound() {
+        let isNotFound = false;
+        this.props.routes.map((value, key) => {
             if (value.isNotFound) {
                 isNotFound = true;
                 return;
             }
         });
         return isNotFound;
-    },
-    generatePath: function(data, num) {
-        var path = '';
+    }
+    generatePath(data, num) {
+        let path = "";
         for (var i in data) {
-            if (!data[i].match('tagItem')) {
-                path = path + '/' + data[i];
+            if (!data[i].match("tagItem")) {
+                path = path + "/" + data[i];
             }
             if (i == num) {
                 break;
             }
         }
         return path;
-    },
-    generatePathname: function(data, num) {
-        var pathname = '';
+    }
+    generatePathname(data, num) {
+        let pathname = "";
         if (num > 1) {
-            data.map(function(value, key) {
+            data.map((value, key) => {
                 if (key > 0 && key <= num) {
-                    var tmp = value;
+                    let tmp = value;
                     if (key > 1) {
-                        tmp = tmp.replace(/(?=\b)\w/g, function(t) {
+                        tmp = tmp.replace(/(?=\b)\w/g, (t) => {
                             return t.toUpperCase();
                         });
                     }
@@ -164,4 +171,4 @@ module.exports = React.createClass({
         }
         return pathname;
     }
-});
+}

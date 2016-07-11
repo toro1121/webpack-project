@@ -1,16 +1,16 @@
-var assign = require('object-assign');
-//constants
-var AppConstants = require('../constants/AppConstants');
-//dispatcher
-var AppDispatcher = require('../dispatcher/AppDispatcher');
+import assign from "object-assign";
+// constants
+import AppConstants from "../constants/AppConstants";
+// dispatcher
+import AppDispatcher from "../dispatcher/AppDispatcher";
+// action
+import AppActionCreators from "./AppActionCreators";
 
-module.exports = assign(require('./AppActionCreators')({
-    type1: 'client'
-}), {
-    tagPanel: function(type, data) {
+export default class extends AppActionCreators {
+    tagPanel(type, data) {
         switch (type) {
-            case 'style':
-                var actionType = AppConstants.TAG_PANEL;
+            case "style":
+                let actionType = AppConstants.TAG_PANEL;
                 break;
         }
         AppDispatcher.handleViewAction({
@@ -18,4 +18,4 @@ module.exports = assign(require('./AppActionCreators')({
             data: data
         });
     }
-});
+}

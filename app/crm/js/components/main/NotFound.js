@@ -1,9 +1,12 @@
-var React = require('react');
+import React from "react";
 
-module.exports = React.createClass({
-    render: function() {
+export default class extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
         return (
-			<section className="content">
+            <section className="content">
 				<div className="error-page">
 					<h2 className="headline text-yellow">404</h2>
 					<div className="error-content">
@@ -14,12 +17,12 @@ module.exports = React.createClass({
 						<p>
 							We could not find the page you were looking for.
 							Meanwhile, you may
-							&nbsp;<a href='../../index.html'>return to dashboard</a>&nbsp;
+							&nbsp;<a href="../../index.html">return to dashboard</a>&nbsp;
 							or try using the search form.
 						</p>
-						<form className='search-form'>
-							<div className='input-group'>
-								<input type="text" name="search" className='form-control' placeholder="Search"/>
+						<form className="search-form">
+							<div className="input-group">
+								<input type="text" name="search" className="form-control" placeholder="Search"/>
 								<div className="input-group-btn">
 									<button type="submit" name="submit" className="btn btn-warning btn-flat">
 										<i className="fa fa-search"></i>
@@ -32,4 +35,4 @@ module.exports = React.createClass({
 			</section>
         );
     }
-});
+}

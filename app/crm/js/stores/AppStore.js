@@ -1,92 +1,98 @@
-var EventEmitter = require('events').EventEmitter;
-var assign = require('object-assign');
+import { EventEmitter } from "events";
+import assign from "object-assign";
 //constants
-var AppConstants = require('../constants/AppConstants');
+import AppConstants from "../constants/AppConstants";
 //dispatcher
-var AppDispatcher = require('../dispatcher/AppDispatcher');
+import AppDispatcher from "../dispatcher/AppDispatcher";
 //action
-var AppActionCreators = require('../actions/AppActionCreators')({});
+import AppActionCreators from "../actions/AppActionCreators";
 
-var CHANGE_EVENT = 'change';
-var o = {
+let AppAction = new AppActionCreators();
+
+let CHANGE_EVENT = "change";
+let o = {
     modal: {
         display: false,
-        title: '訊息',
+        title: "訊息",
         message: null,
         button: [],
     }
 };
 
-var Store = assign({}, EventEmitter.prototype, {
-    getModal: function() {
+class AppStore extends EventEmitter {
+    // constructor() {
+    //     super();
+    // }
+    getModal() {
         return o.modal;
-    },
-    //
-    emitChange: function() {
-        this.emit(CHANGE_EVENT);
-    },
-    addChangeListener: function(callback) {
-        this.on(CHANGE_EVENT, callback);
-    },
-    removeChangeListener: function(callback) {
-        this.removeListener(CHANGE_EVENT, callback);
-    },
-    //
-    dispatchToken: AppDispatcher.register(function(payload) {
-        var action = payload.action;
-        switch (action.actionType) {
-            case AppConstants.MODAL_STATUS:
-                o.modal = assign(o.modal, action.res);
+    }
+    emitChange(type) {
+        this.emit(type ? type : "change");
+    }
+    addChangeListener(callback, type) {
+        this.on(type ? type : "change", callback);
+    }
+    removeChangeListener(callback, type) {
+        this.removeListener(type ? type : "change", callback);
+    }
+}
 
-                var defaultButton = [{
-                    type: 'ok',
-                    name: '確認',
-                    class: 'btn-info',
-                    fn: function() {
-                        AppActionCreators.modal({
-                            display: false
-                        });
-                    }
-                }, {
-                    type: 'cancel',
-                    name: '取消',
-                    class: 'btn-default',
-                    fn: function() {
-                        AppActionCreators.modal({
-                            display: false
-                        });
-                    }
-                }];
-                var button = [];
+let Store = new AppStore();
 
-                for (var i = 0; i < o.modal.button.length; i++) {
-                    if (typeof o.modal.button[i] === 'string' || typeof o.modal.button[i] === 'object') {
-                        if (o.modal.button[i].type == 'custom') {
-                            button.push(assign({
-                                class: 'btn-default',
-                                fn: function() {}
-                            }, o.modal.button[i]));
-                        } else {
-                            for (var j = 0; j < defaultButton.length; j++) {
-                                if (o.modal.button[i] == defaultButton[j].type) {
-                                    button.push(defaultButton[j]);
-                                    break;
-                                } else if (o.modal.button[i].type == defaultButton[j].type) {
-                                    button.push(assign(defaultButton[j], o.modal.button[i]));
-                                    break;
-                                }
+AppDispatcher.register((payload) => {
+    let action = payload.action;
+    switch (action.actionType) {
+        case AppConstants.MODAL_STATUS:
+            o.modal = assign(o.modal, action.res);
+
+            let defaultButton = [{
+                type: "ok",
+                name: "確認",
+                class: "btn-info",
+                fn: () => {
+                    AppAction.modal({
+                        display: false
+                    });
+                }
+            }, {
+                type: "cancel",
+                name: "取消",
+                class: "btn-default",
+                fn: () => {
+                    AppAction.modal({
+                        display: false
+                    });
+                }
+            }];
+            let button = [];
+
+            for (var i = 0; i < o.modal.button.length; i++) {
+                if (typeof o.modal.button[i] === "string" || typeof o.modal.button[i] === "object") {
+                    if (o.modal.button[i].type == "custom") {
+                        button.push(assign({
+                            class: "btn-default",
+                            fn: () => {}
+                        }, o.modal.button[i]));
+                    } else {
+                        for (let j = 0; j < defaultButton.length; j++) {
+                            if (o.modal.button[i] == defaultButton[j].type) {
+                                button.push(defaultButton[j]);
+                                break;
+                            } else if (o.modal.button[i].type == defaultButton[j].type) {
+                                button.push(assign(defaultButton[j], o.modal.button[i]));
+                                break;
                             }
                         }
                     }
                 }
-                o.modal.button = button;
+            }
+            o.modal.button = button;
 
-                Store.emitChange();
-                break;
-        }
+            Store.emitChange();
+            break;
+    }
 
-        return true;
-    })
+    return true;
 });
 
-module.exports = Store;
+export { AppStore, Store };

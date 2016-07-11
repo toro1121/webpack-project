@@ -1,36 +1,43 @@
-var React = require('react');
-var update = require('react-addons-update');
-var ReactRouter = require('react-router');
+import React from "react";
+import update from "react-addons-update";
+import { hashHistory } from "react-router";
 //action
-var AppActionCreators = require('../../../actions/AppActionCreators')({});
-var TagActionCreators = require('../../../actions/TagActionCreators')({
-    type: 'group'
-});
+import TagActionCreators from "../../../actions/TagActionCreators";
 //stores
-var TagStore = require('../../../stores/TagStore');
-var UserStore = require('../../../stores/UserStore');
+import TagStore from "../../../stores/TagStore";
+import UserStore from "../../../stores/UserStore";
 //custom
-var _COMMON = require('../../../common');
+import _COMMON from "../../../common";
 //jsx
-var Input_colorpicker = require('../../element/Input_colorpicker');
+import Input_colorpicker from "../../element/Input_colorpicker";
 
-module.exports = React.createClass({
-    mixins: [ReactRouter.History],
-    getInitialState: function() {
-        var o = TagStore.getData('group', false, true);
-        o.data = TagStore.getDataById('group', this.props.params.id);
+let TagAction = new TagActionCreators({
+    type1: "tag",
+    type2: "group"
+});
+
+export default class extends React.Component {
+    constructor(props) {
+        super(props);
+
+        let o = TagStore.getData("group", false, true);
+        o.data = TagStore.getDataById("group", this.props.params.id);
         if (!o.data.length) {
-            TagActionCreators.data('group', this.props.params.id);
+            TagAction.data("group", this.props.params.id);
         }
-        return o;
-    },
-    componentWillMount: function() {
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+
+        this.state = o;
+    }
+    componentWillMount() {
         TagStore.addChangeListener(this.handleChange);
-    },
-    componentWillUnmount: function() {
+    }
+    componentWillUnmount() {
         TagStore.removeChangeListener(this.handleChange);
-    },
-    render: function() {
+    }
+    render() {
         return (
             <div className="row">
                 <div className="col-xs-12">
@@ -42,13 +49,13 @@ module.exports = React.createClass({
                             <h3 className="box-title"></h3>
                         </div>
                         <form className="form-horizontal" onSubmit={this.handleSubmit}>
-                            <input type="hidden" ref="id" value={this.state.data.length ? this.state.data[0].id : ''} />
+                            <input type="hidden" ref="id" value={this.state.data.length ? this.state.data[0].id : ""} />
                             <div className="box-body">
                                 <div className="col-sm-12">
                                     <div className="form-group">
                                         <label htmlFor="name" className="col-sm-1 control-label">名稱</label>
                                         <div className="col-sm-11">
-                                            <input type="text" className="form-control" id="name" placeholder="名稱" ref="name" value={this.state.data.length ? this.state.data[0].name : ''} onChange={this.handleChange} />
+                                            <input type="text" className="form-control" id="name" placeholder="名稱" ref="name" value={this.state.data.length ? this.state.data[0].name : ""} onChange={this.handleChange} />
                                         </div>
                                     </div>
                                 </div>
@@ -56,7 +63,7 @@ module.exports = React.createClass({
                                     <div className="form-group">
                                         <label htmlFor="color" className="col-sm-1 control-label">顏色</label>
                                         <div className="col-sm-11">
-                                            <Input_colorpicker ref="color" value={this.state.data.length ? this.state.data[0].color : ''} />
+                                            <Input_colorpicker ref="color" value={this.state.data.length ? this.state.data[0].color : ""} />
                                         </div>
                                     </div>
                                 </div>
@@ -71,8 +78,8 @@ module.exports = React.createClass({
                 </div>
             </div>
         );
-    },
-    handleChange: function(e) {
+    }
+    handleChange(e) {
         if (e) {
             this.setState(update(this.state, {
                 data: [{
@@ -80,36 +87,36 @@ module.exports = React.createClass({
                 }]
             }));
         } else {
-            this.setState(TagStore.getData('group'));
+            this.setState(TagStore.getData("group"));
             if (this.state.bool) {
-                setTimeout(function() {
-                    AppActionCreators.modal({
+                setTimeout(() => {
+                    TagAction.modal({
                         display: true,
                         message: this.state.message,
                         button: [{
-                            type: 'ok',
-                            fn: function() {
-                                this.history.pushState(null, '/main/tag');
-                                AppActionCreators.modal({
+                            type: "ok",
+                            fn: () => {
+                                hashHistory.push("/main/tag");
+                                TagAction.modal({
                                     display: false
                                 });
-                            }.bind(this)
+                            }
                         }]
                     });
-                }.bind(this), 1);
+                }, 1);
             }
         }
-    },
-    handleSubmit: function(e) {
-        e.preventDefault();
-        var data = _COMMON.getInputData(this.refs);
-        if (data.name) {
-            data.user_id = UserStore.getData('profile').data.id;
-            data.tagType = 'group';
-            TagActionCreators.edit(data);
-        }
-    },
-    handleClick: function(e) {
-        this.history.pushState(null, '/main/tag');
     }
-});
+    handleSubmit(e) {
+        e.preventDefault();
+        let data = _COMMON.getInputData(this.refs);
+        if (data.name) {
+            data.user_id = UserStore.getData("profile").data.id;
+            data.tagType = "group";
+            TagAction.edit(data);
+        }
+    }
+    handleClick(e) {
+        hashHistory.push("/main/tag");
+    }
+}

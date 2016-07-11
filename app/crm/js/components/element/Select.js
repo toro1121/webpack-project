@@ -1,53 +1,61 @@
-var React = require('react');
+import React from "react";
 //action
-var CompanyActionCreators = require('../../actions/CompanyActionCreators');
-var TagActionCreators = require('../../actions/TagActionCreators');
+import CompanyActionCreators from "../../actions/CompanyActionCreators";
+import TagActionCreators from "../../actions/TagActionCreators";
 //store
-var CompanyStore = require('../../stores/CompanyStore');
-var TagStore = require('../../stores/TagStore');
+import CompanyStore from "../../stores/CompanyStore";
+import TagStore from "../../stores/TagStore";
 
-module.exports = React.createClass({
-    getInitialState: function() {
-        var data = this.getData(this.props.type);
+let CompanyAction = new CompanyActionCreators({
+    type1: "company"
+});
+
+export default class extends React.Component {
+    constructor(props) {
+        super(props);
+
+        let data = this.getData(this.props.type);
         if (!data.length) {
             switch (this.props.type) {
-                case 'company_id':
-                    CompanyActionCreators.data();
+                case "company_id":
+                    CompanyAction.data();
                     break;
-                case 'group':
-                case 'industry':
-                case 'career':
-                    TagActionCreators({
-                        type: this.props.type
+                case "group":
+                case "industry":
+                case "career":
+                    new TagActionCreators({
+                        type1: this.props.type
                     }).data(this.props.type);
                     break;
             }
         }
 
-        return {
-            id: this.props.type == 'group' ? 'parent_id' : this.props.type,
+        this.handleChange = this.handleChange.bind(this);
+
+        this.state = {
+            id: this.props.type == "group" ? "parent_id" : this.props.type,
             data: data
         };
-    },
-    componentWillMount: function() {
-        if (this.props.type == 'company_id') {
+    }
+    componentWillMount() {
+        if (this.props.type == "company_id") {
             CompanyStore.addChangeListener(this.handleChange);
         } else {
             TagStore.addChangeListener(this.handleChange);
         }
-    },
-    componentWillUnmount: function() {
-        if (this.props.type == 'company_id') {
+    }
+    componentWillUnmount() {
+        if (this.props.type == "company_id") {
             CompanyStore.removeChangeListener(this.handleChange);
         } else {
             TagStore.removeChangeListener(this.handleChange);
         }
-    },
-    render: function() {
+    }
+    render() {
         return (
             <select className="form-control" id={this.state.id} value={this.props.value} onChange={this.props.handleChange}>
                 <option value="0">- 請選擇 -</option>
-                {this.state.data.map(function(value, key) {
+                {this.state.data.map((value, key) => {
                     return(
                         <option value={value.id} key={key}>
                             {value.name}
@@ -56,24 +64,24 @@ module.exports = React.createClass({
                 })}
             </select>
         );
-    },
-    handleChange: function(e) {
+    }
+    handleChange(e) {
         this.setState({
             data: this.getData(this.props.type)
         });
-    },
-    getData: function(type) {
-        var data = [];
+    }
+    getData(type) {
+        let data = [];
         switch (type) {
-            case 'company_id':
-                data = CompanyStore.getData('select');
+            case "company_id":
+                data = CompanyStore.getData("select");
                 break;
-            case 'group':
-            case 'industry':
-            case 'career':
-                data = TagStore.getData(type, 'select');
+            case "group":
+            case "industry":
+            case "career":
+                data = TagStore.getData(type, "select");
                 break;
         }
         return data;
     }
-});
+}

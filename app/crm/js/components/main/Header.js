@@ -1,56 +1,64 @@
-var React = require('react');
-var Link = require('react-router').Link;
+import React from "react";
+import { Link } from "react-router";
 //actions
-var UserActionCreators = require('../../actions/UserActionCreators');
+import UserActionCreators from "../../actions/UserActionCreators";
 //store
-var UserStore = require('../../stores/UserStore');
+import UserStore from "../../stores/UserStore";
 //custom
-var _CONFIG = require('../../config')();
-var _COMMON = require('../../common');
+import config from "../../config";
+import _COMMON from "../../common";
 
-module.exports = React.createClass({
-    componentDidMount: function() {
+let UserAction = new UserActionCreators({
+    type1: "user"
+});
+let _CONFIG = config();
+
+export default class extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    componentDidMount() {
         // TODO: jquery => react
-        $(function() {
-            $('[data-toggle=offcanvas]').unbind('click').bind('click', function(e) {
+        $(() => {
+            $("[data-toggle=offcanvas]").on("click", (e) => {
                 if ($(window).width() > (768 - 1)) {
-                    $("body").toggleClass('sidebar-collapse');
+                    $("body").toggleClass("sidebar-collapse");
                 } else {
-                    if ($("body").hasClass('sidebar-open')) {
-                        $("body").removeClass('sidebar-open');
-                        $("body").removeClass('sidebar-collapse')
+                    if ($("body").hasClass("sidebar-open")) {
+                        $("body").removeClass("sidebar-open");
+                        $("body").removeClass("sidebar-collapse")
                     } else {
-                        $("body").addClass('sidebar-open');
+                        $("body").addClass("sidebar-open");
                     }
                 }
             });
-            $(".content-wrapper").click(function() {
+            $(".content-wrapper").click(() => {
                 if ($(window).width() <= (768 - 1) && $("body").hasClass("sidebar-open")) {
-                    $("body").removeClass('sidebar-open');
+                    $("body").removeClass("sidebar-open");
                 }
             });
-            if ($('body').hasClass('fixed') && $('body').hasClass('sidebar-mini')) {
-                $('.main-sidebar').hover(function() {
-                    if ($('body').hasClass('sidebar-mini') && $("body").hasClass('sidebar-collapse') && $(window).width() > 768 - 1) {
-                        $("body").removeClass('sidebar-collapse').addClass('sidebar-expanded-on-hover');
+            if ($("body").hasClass("fixed") && $("body").hasClass("sidebar-mini")) {
+                $(".main-sidebar").hover(() => {
+                    if ($("body").hasClass("sidebar-mini") && $("body").hasClass("sidebar-collapse") && $(window).width() > 768 - 1) {
+                        $("body").removeClass("sidebar-collapse").addClass("sidebar-expanded-on-hover");
                     }
-                }, function() {
-                    if ($('body').hasClass('sidebar-mini') && $('body').hasClass('sidebar-expanded-on-hover') && $(window).width() > 768 - 1) {
-                        if ($('body').hasClass('sidebar-expanded-on-hover')) {
-                            $('body').removeClass('sidebar-expanded-on-hover').addClass('sidebar-collapse');
+                }, () => {
+                    if ($("body").hasClass("sidebar-mini") && $("body").hasClass("sidebar-expanded-on-hover") && $(window).width() > 768 - 1) {
+                        if ($("body").hasClass("sidebar-expanded-on-hover")) {
+                            $("body").removeClass("sidebar-expanded-on-hover").addClass("sidebar-collapse");
                         }
                     }
                 });
             }
         });
-    },
-    render: function() {
+    }
+    render() {
         if (this.props.state.data) {
-            var photo = _CONFIG._URL_API + '/file/' + (this.props.state.data.files && this.props.state.data.files.length ? this.props.state.data.files[0].id + '?' + this.props.state.data.files[0].name : false);
-            var date = this.props.state.data.created_at ? _COMMON.dateFormat(this.props.state.data.created_at, 'yyyy/MM/dd') : null;
+            let photo = _CONFIG._URL_API + "/file/" + (this.props.state.data.files && this.props.state.data.files.length ? this.props.state.data.files[0].id + "?" + this.props.state.data.files[0].name : false);
+            let date = this.props.state.data.created_at ? _COMMON.dateFormat(this.props.state.data.created_at, "yyyy/MM/dd") : null;
             return (
                 <header className="main-header">
-                    <Link to={'/main'} className="logo">
+                    <Link to={"/main"} className="logo">
                         <span className="logo-mini">
                             <b>{_CONFIG._NAME_S}</b>
                             CRM
@@ -81,7 +89,7 @@ module.exports = React.createClass({
                                         </li>
                                         <li className="user-footer">
                                             <div className="pull-left">
-                                                <Link to={'/main/profile'} className="btn btn-default btn-flat">帳號管理</Link>
+                                                <Link to={"/main/profile"} className="btn btn-default btn-flat">帳號管理</Link>
                                             </div>
                                             <div className="pull-right">
                                                 <a href="javascript:void(0)" className="btn btn-default btn-flat" onClick={this.handleClick}>登出</a>
@@ -97,8 +105,8 @@ module.exports = React.createClass({
         } else {
             return (<div />);
         }
-    },
-    handleClick: function(e) {
-        UserActionCreators.userLogout();
     }
-});
+    handleClick(e) {
+        UserAction.userLogout();
+    }
+}

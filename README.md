@@ -17,9 +17,9 @@
 ### Useage
 
 ```bash
-node webpack/webpack.js -h  
+babel-node webpack/webpack.js -h  
 
 ex:  
-node webpack/webpack.js develop {app name}  
-node webpack/webpack.js deploy {app name}  
+babel-node webpack/webpack.js develop {app name}  
+babel-node webpack/webpack.js deploy {app name}  
 ```

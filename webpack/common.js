@@ -1,22 +1,22 @@
-var util = require('util'),
-    path = require('path'),
-    fs = require('fs');
+import fs from 'fs';
+import path from 'path';
+import util from 'util';
 
-module.exports = {
-    copy: function(src, dest) {
+export default class {
+    copy(src, dest) {
         fs.createReadStream(src).pipe(fs.createWriteStream(dest));
-    },
-    mkdir: function(dir) {
+    }
+    mkdir(dir) {
         try {
-            fs.mkdirSync(dir, 0755);
+            fs.mkdirSync(dir, "0755");
         } catch (e) {
             if (e.code != "EEXIST") {
                 throw e;
             }
         }
-    },
-    findFile: function(dir, regex) {
-        var tmp = [];
+    }
+    findFile(dir, regex) {
+        let tmp = [];
         fs.readdir(dir, function(err, arr) {
             arr.map(function(value) {
                 if (value.match(regex)) {
@@ -25,24 +25,24 @@ module.exports = {
             });
         });
         return tmp;
-    },
-    copyDir: function(src, dest) {
+    }
+    copyDir(src, dest) {
         this.mkdir(dest);
-        var files = fs.readdirSync(src);
-        for (var i = 0; i < files.length; i++) {
-            var current = fs.lstatSync(path.join(src, files[i]));
+        let files = fs.readdirSync(src);
+        for (let i = 0; i < files.length; i++) {
+            let current = fs.lstatSync(path.join(src, files[i]));
             if (current.isDirectory()) {
                 this.copyDir(path.join(src, files[i]), path.join(dest, files[i]));
             } else if (current.isSymbolicLink()) {
-                var symlink = fs.readlinkSync(path.join(src, files[i]));
+                let symlink = fs.readlinkSync(path.join(src, files[i]));
                 fs.symlinkSync(symlink, path.join(dest, files[i]));
             } else {
                 this.copy(path.join(src, files[i]), path.join(dest, files[i]));
             }
         }
-    },
-    removeDir: function(dirPath, removeSelf) {
-        var files = [];
+    }
+    removeDir(dirPath, removeSelf) {
+        let files = [];
         if (removeSelf === undefined)
             removeSelf = true;
         try {
@@ -51,8 +51,8 @@ module.exports = {
             return;
         }
         if (files.length > 0) {
-            for (var i = 0; i < files.length; i++) {
-                var filePath = dirPath + '/' + files[i];
+            for (let i = 0; i < files.length; i++) {
+                let filePath = dirPath + '/' + files[i];
                 if (fs.statSync(filePath).isFile())
                     fs.unlinkSync(filePath);
                 else

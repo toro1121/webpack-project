@@ -1,15 +1,17 @@
-var fs = require('fs'),
-    colors = require('colors');
+import fs from "fs";
+import colors from "colors";
 
-var _CONFIG = require('../config');
+import config from "../config";
 
-module.exports = function(callback) {
-    var path = _CONFIG._DIR_BASE + '/app';
-    fs.readdir(path, function(err, arr) {
-        arr.map(function(value, key) {
-            var app = path + '/' + value;
+let _CONFIG = config();
+
+export default function(callback) {
+    let path = _CONFIG._DIR_BASE + "/app";
+    fs.readdir(path, (err, arr) => {
+        arr.map((value, key) => {
+            let app = path + "/" + value;
             if (fs.lstatSync(app).isDirectory()) {
-                console.log(value + ': ' + app.grey);
+                console.log(value + ": " + app.grey);
             }
         });
     });

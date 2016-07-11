@@ -1,14 +1,17 @@
-import React from 'react';
+import React from "react";
 //jsx
-var Header = require('./main/Header');
-var Menu = require('./main/Menu');
-var Footer = require('./main/Footer');
-var ContentHeader = require('./main/ContentHeader');
+import Header from "./main/Header";
+import Menu from "./main/Menu";
+import Footer from "./main/Footer";
+import ContentHeader from "./main/ContentHeader";
 //vendor
-import 'admin-lte/dist/css/skins/_all-skins.min';
+import "admin-lte/dist/css/skins/_all-skins.min";
 
-module.exports = React.createClass({
-    render: function() {
+export default class extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
         return (
             <div className="wrapper">
                 <Header state={this.props.state} />
@@ -24,4 +27,4 @@ module.exports = React.createClass({
             </div>
         );
     }
-});
+}

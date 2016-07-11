@@ -1,21 +1,19 @@
-import React from 'react';
-import {
-    Link
-}
-from 'react-router';
-import RCJ, {
-    Line as LineChart
-}
-from 'react-chartjs';
+import React from "react";
+import { Link } from "react-router";
+import RCJ, { Line as LineChart } from "react-chartjs";
+import "chart.js/Chart.min";
+// Store
+import CompanyStore from "../../stores/CompanyStore";
+import ClientStore from "../../stores/ClientStore";
 
 class Dashboard1 extends React.Component {
     render() {
-        var dayLimit = new Date();
+        let dayLimit = new Date();
         dayLimit.setDate(dayLimit.getDate() + 7);
 
         //本周新增客戶
-        var client = require('../../stores/ClientStore').getData('select');
-        var clientNum = 0;
+        let client = ClientStore.getData("select");
+        let clientNum = 0;
         for (var i in client) {
             if (dayLimit > new Date(client[i].updated_at)) {
                 clientNum++;
@@ -23,8 +21,8 @@ class Dashboard1 extends React.Component {
         }
 
         //本周新增公司
-        var company = require('../../stores/CompanyStore').getData('select');
-        var companyNum = 0;
+        let company = CompanyStore.getData("select");
+        let companyNum = 0;
         for (var i in company) {
             if (dayLimit > new Date(company[i].updated_at)) {
                 companyNum++;
@@ -42,7 +40,7 @@ class Dashboard1 extends React.Component {
 			            <div className="icon">
 			                <i className="fa fa-user"></i>
 			            </div>
-			            <Link to={'/main/client'} className="small-box-footer">
+			            <Link to={"/main/client"} className="small-box-footer">
 			            	查看更多
 			            	&nbsp;
 		            		<i className="fa fa-arrow-circle-right"></i>
@@ -58,7 +56,7 @@ class Dashboard1 extends React.Component {
 			            <div className="icon">
 			                <i className="fa fa-hospital-o"></i>
 			            </div>
-			            <Link to={'/main/company'} className="small-box-footer">
+			            <Link to={"/main/company"} className="small-box-footer">
 			            	查看更多
 			            	&nbsp;
 			            	<i className="fa fa-arrow-circle-right"></i>
@@ -72,7 +70,7 @@ class Dashboard1 extends React.Component {
 
 class Dashboard2 extends React.Component {
     render() {
-        var data = {
+        let data = {
             labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
             datasets: [{
                 label: "test",
@@ -98,8 +96,8 @@ class Dashboard2 extends React.Component {
 		                        <button className="btn btn-box-tool" data-widget="remove"><i className="fa fa-times"></i></button>
 			                </div>
 			            </div>
-			            <div className="box-body" style={{width:'100%',height:'200px'}}>
-			                <LineChart data={data} options={{}} style={{width:'100%',height:'100%'}} />
+			            <div className="box-body" style={{width:"100%",height:"200px"}}>
+			                <LineChart data={data} options={{}} style={{width:"100%",height:"100%"}} />
 			            </div>
 			        </div>
 			    </div>

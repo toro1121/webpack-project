@@ -1,155 +1,168 @@
-var React = require('react');
-var ReactRouter = require('react-router');
-var Link = ReactRouter.Link;
+import React from "react";
+import { Link, hashHistory } from "react-router";
 //action
-var AppActionCreators = require('../../actions/AppActionCreators')({});
-var ClientActionCreators = require('../../actions/ClientActionCreators');
+import ClientActionCreators from "../../actions/ClientActionCreators";
 //stores
-var ClientStore = require('../../stores/ClientStore');
+import ClientStore from "../../stores/ClientStore";
 //jsx
-var DataTable = require('../element/DataTable');
-var TagPanel = require('../element/TagPanel');
+import { Control, Table } from "../element/DataTable";
+import TagPanel from "../element/TagPanel";
 
-module.exports = React.createClass({
-    mixins: [ReactRouter.History],
-    getInitialState: function() {
-        var o = ClientStore.getData('list');
+let ClientAction = new ClientActionCreators({
+    type1: "client"
+});
+
+export default class extends React.Component {
+    constructor(props) {
+        super(props);
+
+        let o = ClientStore.getData("list");
         o.config.columns = [{
-            title: '姓名',
-            prop: 'name',
-            render: (val, row) => (<Link to={'/main/client/page/' + row.id}>{row.name}</Link>)
+            title: "姓名",
+            prop: "name",
+            render: (val, row) => (<Link to={"/main/client/page/" + row.id}>{row.name}</Link>)
         }, {
-            title: '公司',
-            render: (val, row) => (row.company ? <Link to={'/main/company/page/' + row.company.id}>{row.company.name}</Link> : '')
+            title: "公司",
+            render: (val, row) => (row.company ? <Link to={"/main/company/page/" + row.company.id}>{row.company.name}</Link> : "")
         }, {
-            title: '職位',
-            render: (val, row) => (row.career.length ? <Link to={'/main/client?id=' + row.career[0].id}>{row.career[0].name}</Link> : '')
+            title: "職位",
+            render: (val, row) => (row.career.length ? <Link to={"/main/client?id=" + row.career[0].id}>{row.career[0].name}</Link> : "")
         }, {
-            title: '電話',
-            prop: 'phone'
+            title: "電話",
+            prop: "phone"
         }, {
-            title: '手機',
-            prop: 'mobile'
+            title: "手機",
+            prop: "mobile"
         }, {
-            title: 'Mail',
-            prop: 'email',
-            render: (val, row) => (<a href={'mailto:' + row.email}>{row.email}</a>)
+            title: "Mail",
+            prop: "email",
+            render: (val, row) => (<a href={"mailto:" + row.email}>{row.email}</a>)
         }, {
-            title: '標籤',
-            className: 'tag',
-            render: (val, row) => <div className="tag">{row.tag.map(function(value, key){
-                var style = {
-                    background: '#' + value.color
+            title: "標籤",
+            className: "tag",
+            render: (val, row) => <div className="tag">{row.tag.map((value, key) => {
+                let style = {
+                    background: "#" + value.color
                 };
-                var query = {id:value.id};
-                return (<span key={key} style={style}><Link to={'/main/client'} query={query}>{value.name}</Link></span>);
+                let query = {id:value.id};
+                return (<span key={key} style={style}><Link to={"/main/client"} query={query}>{value.name}</Link></span>);
             })}</div>
         }, {
-            title: '修改時間',
-            prop: 'updated_at'
+            title: "修改時間",
+            prop: "updated_at"
         }, {
-            title: '修改者',
-            prop: 'user',
-            className: 'empty-cell',
-            render: (val, row) => (<span>{row.user ? row.user.name : ''}</span>)
+            title: "修改者",
+            prop: "user",
+            className: "empty-cell",
+            render: (val, row) => (<span>{row.user ? row.user.name : ""}</span>)
         }];
         o.config.button = {
             control: [
                 // TODO: 多筆貼標籤
                 // {
-                //     type: 'custom',
+                //     type: "custom",
                 //     name: <span><i className="fa fa-tags"></i>&nbsp;貼標籤</span>,
-                //     class: 'btn-info',
-                //     fn: function(e) {
-                //         this.handleClick('tag', false, e);
+                //     class: "btn-info",
+                //     fn(e) {
+                //         this.handleClick("tag", false, e);
                 //     }.bind(this)
-                // }, 
-                'add', 'del'
+                // },
+                "add", "del"
             ],
-            table: ['checkbox', {
-                type: 'control',
-                button: ['edit', 'del']
+            table: ["checkbox", {
+                type: "control",
+                button: ["edit", "del"]
             }]
         };
-        return o;
-    },
-    componentWillReceiveProps: function() {
-        setTimeout(function() {
-            ClientActionCreators.data(false, this.props.location.query.id);
-        }.bind(this), 1);
-    },
-    componentWillMount: function() {
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleClick = this.handleClick.bind(this);
+
+        this.state = o;
+    }
+    componentWillReceiveProps() {
+        setTimeout(() => {
+            ClientAction.data(false, this.props.location.query.id);
+        }, 1);
+    }
+    componentWillMount() {
         ClientStore.addChangeListener(this.handleChange);
-        ClientActionCreators.data(false, this.props.location.query.id);
-    },
-    componentWillUnmount: function() {
+        ClientAction.data(false, this.props.location.query.id);
+    }
+    componentWillUnmount() {
         ClientStore.removeChangeListener(this.handleChange);
-    },
-    render: function() {
+    }
+    render() {
         return (
             <div className="row list tag">
                 <TagPanel />
-                <DataTable.Control state={this.state.config.button} handleClick={this.handleClick} />
+                <Control state={this.state.config.button} handleClick={this.handleClick} />
                 <div className="col-xs-12">
                     <div className="box">
                         <div className="box-body">
-                            <DataTable.Table state={this.state} handleClick={this.handleClick} handleSort={ClientActionCreators.sort} handleChangePage={ClientActionCreators.page} handleSearch={ClientActionCreators.filter} />
+                            <Table
+                                state={this.state}
+                                handleClick={this.handleClick}
+                                handleSort={ClientAction.sort}
+                                handleChangePage={ClientAction.page}
+                                handleSearch={ClientAction.filter}
+                            />
                         </div>
                     </div>
                 </div>
             </div>
         );
-    },
-    handleChange: function(e) {
-        this.setState(ClientStore.getData('list'));
-    },
-    handleClick: function(type, id, e) {
+    }
+    handleChange(e) {
+        this.setState(ClientStore.getData("list"));
+    }
+    handleClick(type, id, e) {
         switch (type) {
-            case 'add':
-                this.history.pushState(null, '/main/client/add');
+            case "add":
+                hashHistory.push("/main/client/add");
                 break;
-            case 'edit':
-                this.history.pushState(null, '/main/client/edit/' + id);
+            case "edit":
+                hashHistory.push("/main/client/edit/" + id);
                 break;
-            case 'del':
-                AppActionCreators.modal(id == 'all' && !this.state.data.checkbox.length ? {
+            case "del":
+                ClientAction.modal(id == "all" && !this.state.data.checkbox.length ? {
                     display: true,
-                    message: '請先勾選欲刪除項目!',
-                    button: ['ok']
+                    message: "請先勾選欲刪除項目!",
+                    button: ["ok"]
                 } : {
                     display: true,
-                    message: 'Are you sure?',
+                    message: "Are you sure?",
                     button: [{
-                        type: 'ok',
-                        fn: function() {
-                            var ids = id == 'all' ? this.state.data.checkbox : [id];
-                            ClientActionCreators.del(ids);
-                            AppActionCreators.modal({
+                        type: "ok",
+                        fn: () => {
+                            let ids = id == "all" ? this.state.data.checkbox : [id];
+                            ClientAction.del(ids);
+                            ClientAction.modal({
                                 display: false
                             });
-                        }.bind(this)
-                    }, 'cancel']
+                        }
+                    }, "cancel"]
                 });
                 break;
-            case 'checkbox':
-                ClientActionCreators.checkbox(id, e);
+            case "checkbox":
+                ClientAction.checkbox(id, e);
                 break;
-            case 'tag':
+            case "tag":
                 if (this.state.data.checkbox.length) {
-                    var obj = e.target.tagName == 'BUTTON' ? $(e.target) : $(e.target).parents('button:first');
-                    ClientActionCreators.tagPanel('style', {
-                        display: 'block',
+                    let obj = e.target.tagName == "BUTTON" ? $(e.target) : $(e.target).parents("button:first");
+                    ClientAction.tagPanel("style", {
+                        display: "block",
                         top: obj.position().top + 3,
                         left: obj.position().left + 100
                     });
                 } else {
-                    AppActionCreators.modal({
+                    ClientAction.modal({
                         display: true,
-                        message: '請先勾選欲標籤客戶!',
-                        button: ['ok']
+                        message: "請先勾選欲標籤客戶!",
+                        button: ["ok"]
                     });
                 }
                 break;
         }
     }
-});
+}

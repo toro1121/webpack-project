@@ -1,18 +1,19 @@
-import React from 'react';
-import {
-    Link
-}
-from 'react-router';
+import React from "react";
+import { Link, hashHistory } from "react-router";
 //actions
-import UserActionCreators from '../actions/UserActionCreators';
+import UserActionCreators from "../actions/UserActionCreators";
 //stores
-import UserStore from '../stores/UserStore';
+import UserStore from "../stores/UserStore";
 //custom
-import _COMMON from '../common';
+import _COMMON from "../common";
 //jsx
-import Logo from './other/Logo';
-import Message from './other/Message';
-import Checkbox from './element/Checkbox';
+import Logo from "./other/Logo";
+import Message from "./other/Message";
+import Checkbox from "./element/Checkbox";
+
+let UserAction = new UserActionCreators({
+    type1: "user"
+});
 
 export default class extends React.Component {
     constructor(props) {
@@ -69,7 +70,7 @@ export default class extends React.Component {
                             </div>
                         </div>
                     </form>
-                    <Link to={'/login'} className="text-center">已經有帳號</Link>
+                    <Link to={"/login"} className="text-center">已經有帳號</Link>
                 </div>
             </div>
         );
@@ -77,18 +78,18 @@ export default class extends React.Component {
     handleChange(e) {
         this.setState(UserStore.getData());
         if (this.state.bool) {
-            this.history.pushState(null, '/login');
+            hashHistory.push("/login");
         }
     }
     handleSubmit(e) {
         e.preventDefault();
 
-        var o = this.state;
-        var data = _COMMON.getInputData(this.refs);
+        let o = this.state;
+        let data = _COMMON.getInputData(this.refs);
         data.email = data.username;
 
-        var bool = true;
-        var i = 0;
+        let bool = true;
+        let i = 0;
         for (var key in data) {
             if (!data[key]) {
                 bool = false;
@@ -105,17 +106,17 @@ export default class extends React.Component {
                         delete data.password1;
                         delete data.password2;
 
-                        UserActionCreators.userRegister(data);
+                        UserAction.userRegister(data);
                     } else {
-                        o.message = '密碼不相符!';
+                        o.message = "密碼不相符!";
                     }
                 }
             } else {
-                o.message = '欄位填寫不完整!';
-                $('input:eq(' + i + ')').focus();
+                o.message = "欄位填寫不完整!";
+                $("input:eq(" + i + ")").focus();
             }
         } else {
-            o.message = '未勾選我同意條款!'
+            o.message = "未勾選我同意條款!"
         }
 
         this.setState(o);

@@ -1,20 +1,24 @@
-var React = require('react');
+import React from "react";
 //action
-var AppActionCreators = require('../../actions/AppActionCreators')({});
+import AppActionCreators from "../../actions/AppActionCreators";
 //store
-var AppStore = require('../../stores/AppStore');
+import { Store as AppStore } from "../../stores/AppStore";
 
-module.exports = React.createClass({
-    getInitialState: function() {
-        return AppStore.getModal();
-    },
-    componentWillMount: function() {
+export default class extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.handleChange = this.handleChange.bind(this);
+
+        this.state = AppStore.getModal();
+    }
+    componentWillMount() {
         AppStore.addChangeListener(this.handleChange);
-    },
-    componentWillUnmount: function() {
+    }
+    componentWillUnmount() {
         AppStore.removeChangeListener(this.handleChange);
-    },
-    render: function() {
+    }
+    render() {
         return this.state.display ? (
             <div className="modal">
                 <div className="modal-dialog">
@@ -29,9 +33,9 @@ module.exports = React.createClass({
                             <p>{this.state.message}</p>
                         </div>
                         <div className="modal-footer">
-                            {this.state.button.map(function(value, key) {
+                            {this.state.button.map((value, key) => {
                                 return (
-                                    <button type="button" className={'btn ' + value.class} onClick={value.fn} key={key}>{value.name}</button>
+                                    <button type="button" className={"btn " + value.class} onClick={value.fn} key={key}>{value.name}</button>
                                 );
                             })}
                         </div>
@@ -39,13 +43,13 @@ module.exports = React.createClass({
                 </div>
             </div>
         ) : <div />;
-    },
-    handleChange: function(e) {
+    }
+    handleChange(e) {
         this.setState(AppStore.getModal());
-    },
-    handleClick: function(type, e) {
+    }
+    handleClick(type, e) {
         AppActionCreators.modal({
             display: false
         });
     }
-});
+}

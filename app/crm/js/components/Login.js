@@ -1,27 +1,36 @@
-var React = require('react');
-var Link = require('react-router').Link;
+import React from "react";
+import { Link, hashHistory } from "react-router";
 //actions
-var UserActionCreators = require('../actions/UserActionCreators');
+import UserActionCreators from "../actions/UserActionCreators";
 //stores
-var UserStore = require('../stores/UserStore');
+import UserStore from "../stores/UserStore";
 //custom
-var _COMMON = require('../common');
+import _COMMON from "../common";
 //jsx
-var Logo = require('./other/Logo');
-var Message = require('./other/Message');
-var Checkbox = require('./element/Checkbox');
+import Logo from "./other/Logo";
+import Message from "./other/Message";
+import Checkbox from "./element/Checkbox";
 
-module.exports = React.createClass({
-    getInitialState: function() {
-        return UserStore.getData(false, true);
-    },
-    componentWillMount: function() {
+let UserAction = new UserActionCreators({
+    type1: "user"
+});
+
+export default class extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+
+        this.state = UserStore.getData(false, true);
+    }
+    componentWillMount() {
         UserStore.addChangeListener(this.handleChange);
-    },
-    componentWillUnmount: function() {
+    }
+    componentWillUnmount() {
         UserStore.removeChangeListener(this.handleChange);
-    },
-    render: function() {
+    }
+    render() {
         return (
             <div className="login-box">
                 <Logo />
@@ -53,38 +62,38 @@ module.exports = React.createClass({
                         </div>
                     </form>
 
-                    <Link to={'/forget'} className="text-center">忘記密碼</Link>
+                    <Link to={"/forget"} className="text-center">忘記密碼</Link>
                     <br />
-                    <Link to={'/register'} className="text-center">註冊</Link>
+                    <Link to={"/register"} className="text-center">註冊</Link>
                 </div>
             </div>
         );
-    },
-    handleChange: function(e) {
+    }
+    handleChange(e) {
         this.setState(UserStore.getData());
-    },
-    handleSubmit: function(e) {
+    }
+    handleSubmit(e) {
         e.preventDefault();
 
-        var o = this.state;
-        var data = _COMMON.getInputData(this.refs);
+        let o = this.state;
+        let data = _COMMON.getInputData(this.refs);
 
-        var bool = true;
-        var i = 0;
+        let bool = true;
+        let i = 0;
         for (var key in data) {
-            if (!data[key] && key != 'remember') {
+            if (!data[key] && key != "remember") {
                 bool = false;
                 break;
             }
             i++;
         }
         if (bool) {
-            UserActionCreators.userLogin(data);
+            UserAction.userLogin(data);
         } else {
-            o.message = '欄位填寫不完整!';
-            $('input:eq(' + i + ')').focus();
+            o.message = "欄位填寫不完整!";
+            $("input:eq(" + i + ")").focus();
         }
 
         this.setState(o);
     }
-});
+}

@@ -1,30 +1,37 @@
-var React = require('react');
-var ReactRouter = require('react-router');
+import React from "react";
+import { hashHistory } from "react-router";
 //action
-var AppActionCreators = require('../../actions/AppActionCreators')({});
-var ClientActionCreators = require('../../actions/ClientActionCreators');
+import ClientActionCreators from "../../actions/ClientActionCreators";
 //stores
-var ClientStore = require('../../stores/ClientStore');
-var UserStore = require('../../stores/UserStore');
+import ClientStore from "../../stores/ClientStore";
+import UserStore from "../../stores/UserStore";
 //custom
-var _COMMON = require('../../common');
+import _COMMON from "../../common";
 //jsx
-var Select = require('../element/Select');
-var ReactSelect = require('../element/ReactSelect');
-var ReactDropzone = require('../element/ReactDropzone');
+import Select from "../element/Select";
+import ReactSelect from "../element/ReactSelect";
+import ReactDropzone from "../element/ReactDropzone";
 
-module.exports = React.createClass({
-    mixins: [ReactRouter.History],
-    getInitialState: function() {
-        return ClientStore.getData(false, true);
-    },
-    componentWillMount: function() {
+let ClientAction = new ClientActionCreators({
+    type1: "client"
+});
+
+export default class extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+
+        this.state = ClientStore.getData(false, true);
+    }
+    componentWillMount() {
         ClientStore.addChangeListener(this.handleChange);
-    },
-    componentWillUnmount: function() {
+    }
+    componentWillUnmount() {
         ClientStore.removeChangeListener(this.handleChange);
-    },
-    render: function() {
+    }
+    render() {
         return (
             <div className="row">
 	            <div className="col-xs-12">
@@ -149,39 +156,39 @@ module.exports = React.createClass({
 				</div>
 			</div>
         );
-    },
-    handleChange: function(e) {
+    }
+    handleChange(e) {
         this.setState(ClientStore.getData());
         if (this.state.bool) {
-            setTimeout(function() {
-                AppActionCreators.modal({
+            setTimeout(() => {
+                ClientAction.modal({
                     display: true,
                     message: this.state.message,
                     button: [{
-                        type: 'ok',
-                        fn: function() {
-                            this.history.pushState(null, '/main/client');
-                            AppActionCreators.modal({
+                        type: "ok",
+                        fn: () => {
+                            hashHistory.push("/main/client");
+                            ClientAction.modal({
                                 display: false
                             });
-                        }.bind(this)
+                        }
                     }]
                 });
-            }.bind(this), 1);
+            }, 1);
         }
-    },
-    handleSubmit: function(e) {
-        e.preventDefault();
-        var data = _COMMON.getInputData(this.refs);
-        if (data.name) {
-            data.user_id = UserStore.getData('profile').data.id;
-            ClientActionCreators.add(data);
-        }
-    },
-    handleClick: function(e) {
-        this.history.pushState(null, '/main/client');
-    },
-    handleDrop: function(files) {
-        ClientActionCreators.file(this.state.data[0].id, files[0]);
     }
-});
+    handleSubmit(e) {
+        e.preventDefault();
+        let data = _COMMON.getInputData(this.refs);
+        if (data.name) {
+            data.user_id = UserStore.getData("profile").data.id;
+            ClientAction.add(data);
+        }
+    }
+    handleClick(e) {
+        hashHistory.push("/main/client");
+    }
+    handleDrop(files) {
+        ClientAction.file(this.state.data[0].id, files[0]);
+    }
+}

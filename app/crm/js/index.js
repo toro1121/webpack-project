@@ -1,5 +1,5 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
 import {
     Router,
     Route,
@@ -7,18 +7,24 @@ import {
     IndexRoute,
     hashHistory
 }
-from 'react-router';
+from "react-router";
 //action
-import UserActionCreators from './actions/UserActionCreators';
+import UserActionCreators from "./actions/UserActionCreators";
 //stores
-import UserStore from './stores/UserStore'
+import UserStore from "./stores/UserStore";
 //jsx
-import Modal from './components/element/Modal'
+import Modal from "./components/element/Modal";
 //vendor
-import 'bootstrap/dist/css/bootstrap.min';
-import 'font-awesome/css/font-awesome.min';
-import 'admin-lte/dist/css/AdminLTE.min';
-import '../sass/fix';
+import "bootstrap/dist/css/bootstrap.min";
+import "bootstrap/dist/js/bootstrap.min";
+import "font-awesome/css/font-awesome.min";
+import "admin-lte/dist/css/AdminLTE.min";
+import "admin-lte/plugins/slimScroll/jquery.slimscroll.min";
+import "../sass/fix";
+
+let UserAction = new UserActionCreators({
+    type1: "user"
+});
 
 class App extends React.Component {
     constructor(props) {
@@ -27,18 +33,18 @@ class App extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.RedirectByUserStatus = this.RedirectByUserStatus.bind(this);
 
-        this.state = UserStore.getData('profile');
+        this.state = UserStore.getData("profile");
     }
     componentWillMount() {
-        UserStore.addChangeListener(this.handleChange, 'status');
-        UserActionCreators.userStatus();
+        UserStore.addChangeListener(this.handleChange, "status");
+        UserAction.userStatus();
         return this.RedirectByUserStatus();
     }
     componentDidUpdate() {
         return this.RedirectByUserStatus();
     }
     componentWillUnmount() {
-        UserStore.removeChangeListener(this.handleChange, 'status');
+        UserStore.removeChangeListener(this.handleChange, "status");
     }
     render() {
         return (
@@ -49,63 +55,63 @@ class App extends React.Component {
         );
     }
     handleChange() {
-        this.setState(UserStore.getData('profile'));
+        this.setState(UserStore.getData("profile"));
     }
     RedirectByUserStatus() {
-        var page = this.props.location.pathname.split(/\//)[1] ? this.props.location.pathname.split(/\//)[1] : 'login';
+        let page = this.props.location.pathname.split(/\//)[1] ? this.props.location.pathname.split(/\//)[1] : "login";
 
-        if (typeof this.state.status == 'boolean') {
-            if (page != 'main' && this.state.status) {
-                // this.history.pushState(null, '/main');
-            } else if (page == 'main' && !this.state.status) {
-                // this.history.pushState(null, '/');
+        if (typeof this.state.status == "boolean") {
+            if (page != "main" && this.state.status) {
+                hashHistory.push("/main");
+            } else if (page == "main" && !this.state.status) {
+                hashHistory.push("/");
             }
 
-            $('body').fadeIn();
+            $("body").fadeIn();
         }
 
         //change website title
-        var title = 'Toro | CRM';
+        let title = "Toro | CRM";
         switch (page) {
-            case 'login':
-                title += ' - 登入';
+            case "login":
+                title += " - 登入";
                 break;
-            case 'register':
-                title += ' - 註冊';
+            case "register":
+                title += " - 註冊";
                 break;
         }
-        $(document).find('title:first').text(title);
+        $(document).find("title:first").text(title);
 
         //cahnge body style
-        if (page == 'main') {
-            $('body').attr('class', 'sidebar-mini fixed skin-black-light');
+        if (page == "main") {
+            $("body").attr("class", "sidebar-mini fixed skin-black-light");
         } else {
-            $('body').attr('class', 'login-page');
+            $("body").attr("class", "login-page");
         }
     }
 }
 
-import Login from './components/Login';
-import Register from './components/Register';
-import Forget from './components/Forget';
-import Main from './components/Main';
-import MainNotFound from './components/main/NotFound';
-import MainIndex from './components/main/Index';
-import UserEdit from './components/user/edit';
-import Client from './components/client/list';
-import ClientPage from './components/client/page';
-import ClientAdd from './components/client/add';
-import ClientEdit from './components/client/edit';
-var Company = require('./components/company/list');
-var CompanyPage = require('./components/company/page');
-var CompanyAdd = require('./components/company/add');
-var CompanyEdit = require('./components/company/edit');
-var TagGroup = require('./components/tag/group/list');
-var TagGroupAdd = require('./components/tag/group/add');
-var TagGroupEdit = require('./components/tag/group/edit');
-var TagItem = require('./components/tag/item/list');
-var TagItemAdd = require('./components/tag/item/add');
-var TagItemEdit = require('./components/tag/item/edit');
+import Login from "./components/Login";
+import Register from "./components/Register";
+import Forget from "./components/Forget";
+import Main from "./components/Main";
+import MainNotFound from "./components/main/NotFound";
+import MainIndex from "./components/main/Index";
+import UserEdit from "./components/user/edit";
+import Client from "./components/client/list";
+import ClientPage from "./components/client/page";
+import ClientAdd from "./components/client/add";
+import ClientEdit from "./components/client/edit";
+import Company from "./components/company/list";
+import CompanyPage from "./components/company/page";
+import CompanyAdd from "./components/company/add";
+import CompanyEdit from "./components/company/edit";
+import TagGroup from "./components/tag/group/list";
+import TagGroupAdd from "./components/tag/group/add";
+import TagGroupEdit from "./components/tag/group/edit";
+import TagItem from "./components/tag/item/list";
+import TagItemAdd from "./components/tag/item/add";
+import TagItemEdit from "./components/tag/item/edit";
 
 ReactDOM.render((
     <Router history={hashHistory}>
@@ -151,4 +157,4 @@ ReactDOM.render((
             <Route path="*" component={Login} />
         </Route>
     </Router>
-), $('div#container')[0]);
+), $("div#container")[0]);

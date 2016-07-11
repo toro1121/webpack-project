@@ -1,31 +1,40 @@
-var React = require('react');
-var Link = require('react-router').Link;
+import React from "react";
+import { Link } from "react-router";
 //action
-var TagActionCreators = require('../../actions/TagActionCreators')({});
+import TagActionCreators from "../../actions/TagActionCreators";
 //store
-var TagStore = require('../../stores/TagStore');
+import TagStore from "../../stores/TagStore";
 //jsx
-var Checkbox = require('../element/Checkbox');
+import Checkbox from "../element/Checkbox";
+
+let TagAction = new TagActionCreators({
+    type1: "tag"
+});
 
 // TODO: tag panel.
-module.exports = React.createClass({
-    getInitialState: function() {
-        return {
-            data: TagStore.getData('all'),
+export default class extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleClick = this.handleClick.bind(this);
+
+        this.state = {
+            data: TagStore.getData("all"),
             panel: TagStore.getPanel()
         };
-    },
-    componentWillMount: function() {
+    }
+    componentWillMount() {
         TagStore.addChangeListener(this.handleChange);
-        TagActionCreators.data('all');
-    },
-    componentWillUnmount: function() {
+        TagAction.data("all");
+    }
+    componentWillUnmount() {
         TagStore.removeChangeListener(this.handleChange);
-    },
-    render: function() {
+    }
+    render() {
         return (
             <ul className="tagPanel" style={this.state.panel.style}>
-                <li onClick={this.handleClick.bind(this, 'close')}>
+                <li onClick={this.handleClick.bind(this, "close")}>
                     <h5>
                         <i className="fa fa-tags"></i>
                         &nbsp;貼標籤
@@ -43,14 +52,14 @@ module.exports = React.createClass({
                     </div>
                 </li>
                 <div className="body">
-                    {this.state.data.map(function(value, key){
+                    {this.state.data.map((value, key) => {
                         return(
                             <li key={key}>
-                                <span><Checkbox id={'checkbox_' + value.id} className={value.checked ? 'checked' : ''} handleClick={this.handleClick} /></span>
+                                <span><Checkbox id={"checkbox_" + value.id} className={value.checked ? "checked" : ""} handleClick={this.handleClick} /></span>
                                 <span>{value.name}</span>
                             </li>
                         );
-                    }.bind(this))}
+                    })}
                 </div>
                 <li>
                     <Link to="tagGroupAdd">建立標籤</Link>
@@ -59,27 +68,27 @@ module.exports = React.createClass({
                     <Link to="tagGroup">管理標籤</Link>
                 </li>
                 <li>
-                    <a href="javascript:void(0)" onClick={this.handleClick.bind(this, 'save')}>套用</a>
+                    <a href="javascript:void(0)" onClick={this.handleClick.bind(this, "save")}>套用</a>
                 </li>
             </ul>
         );
-    },
-    handleChange: function(e) {
+    }
+    handleChange(e) {
         this.setState({
-            data: TagStore.getData('all'),
+            data: TagStore.getData("all"),
             panel: TagStore.getPanel()
         });
-    },
-    handleClick: function(type, e) {
+    }
+    handleClick(type, e) {
         switch (type) {
-            case 'save':
+            case "save":
                 // TODO: client add tag.
-                console.log('save');
-            case 'close':
-                var o = this.state;
-                o.panel.style.display = 'none';
+                console.log("save");
+            case "close":
+                let o = this.state;
+                o.panel.style.display = "none";
                 this.setState(o);
                 break;
         }
     }
-});
+}

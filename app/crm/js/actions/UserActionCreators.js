@@ -1,38 +1,41 @@
-var assign = require('object-assign');
-//constants
-var AppConstants = require('../constants/AppConstants');
+import assign from "object-assign";
+// constants
+import AppConstants from "../constants/AppConstants";
+// action
+import AppActionCreators from "./AppActionCreators";
 
-module.exports = assign(require('./AppActionCreators')({
-    type1: 'user'
-}), {
-    userStatus: function(data) {
+export default class extends AppActionCreators {
+    userStatus(data) {
         this.ajax({
-            url: '/user/status',
+            url: "/user/status",
             data: data
         }, AppConstants.USER_STATUS);
-    },
-    userLogin: function(data) {
+    }
+    userLogin(data) {
         this.ajax({
-            url: '/user/login',
+            type: "POST",
+            url: "/user/login",
             data: data
         }, AppConstants.USER_LOGINOUT);
-    },
-    userLogout: function(data) {
+    }
+    userLogout(data) {
         this.ajax({
-            url: '/user/logout',
+            url: "/user/logout",
             data: data
         }, AppConstants.USER_LOGINOUT);
-    },
-    userRegister: function(data) {
+    }
+    userRegister(data) {
         this.ajax({
-            url: '/user/register',
+            type: "POST",
+            url: "/user/register",
             data: data
         }, AppConstants.USER_REGISTER);
-    },
-    userForget: function(data) {
+    }
+    userForget(data) {
         this.ajax({
-            url: '/user/forget',
+            type: "POST",
+            url: "/user/forget",
             data: data
         }, AppConstants.USER_FORGET);
     }
-});
+}

@@ -1,30 +1,32 @@
-var fs = require('fs'),
-    cp = require('child_process'),
+import fs from "fs";
+import cp from "child_process";
+import Webpack from "webpack";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import ExtractTextPlugin from "extract-text-webpack-plugin";
+import OptimizeCssAssetsPlugin from "optimize-css-assets-webpack-plugin";
 
-    Webpack = require('webpack'),
-    HtmlWebpackPlugin = require('html-webpack-plugin'),
-    ExtractTextPlugin = require('extract-text-webpack-plugin'),
-    OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin'),
+import _COMMON from "../common";
+import base from "./base";
 
-    _CONFIG = require('../config'),
-    _COMMON = require('../common'),
-    o = require('./base');
+export default function() {
+    let _CONFIG = arguments[0];
+    let o = base(_CONFIG);
 
-module.exports = function() {
-    o.output.path = _CONFIG._DIR_BASE + '/dist';
+    o.output.path = _CONFIG._DIR_BASE + "/dist";
 
-    if (fs.existsSync(_CONFIG._DIR_APP + '/js/common.js')) {
-        o.entry.common.push(_CONFIG._DIR_APP + '/js/common');
+    if (fs.existsSync(_CONFIG._DIR_APP + "/js/common.js")) {
+        o.entry.common.push(_CONFIG._DIR_APP + "/js/common");
     }
 
     o.module.loaders.push({
         test: /\.(sa|sc|c)ss$/,
-        loader: ExtractTextPlugin.extract('style', 'css!sass', {
-            publicPath: '../'
+        loader: ExtractTextPlugin.extract("style", "css!sass", {
+            publicPath: "../"
         }),
-        include: [
-            new RegExp(_CONFIG._DIR_APP + '/sass'),
-            new RegExp(_CONFIG._DIR_APP + '/css')
+        exclude: [
+            new RegExp(_CONFIG._DIR_NODE),
+            new RegExp(_CONFIG._DIR_BOWER),
+            new RegExp(_CONFIG._DIR_VENDOR)
         ]
     });
 
@@ -42,10 +44,10 @@ module.exports = function() {
         new Webpack.NoErrorsPlugin(),
         new OptimizeCssAssetsPlugin({
             assetNameRegExp: /\.(sa|sc|c)ss$/,
-            cssProcessor: require('cssnano'),
+            cssProcessor: require("cssnano"),
             cssProcessorOptions: {
                 autoprefixer: {
-                    browsers: ['last 10 versions'],
+                    browsers: ["last 10 versions"],
                     add: true
                 },
                 discardComments: { removeAll: true }
@@ -57,33 +59,33 @@ module.exports = function() {
     o.devtool = false;
 
     // add html template
-    arguments[0].map(function(value) {
-        var name = value.split(/\./)[0];
-        if (fs.existsSync(_CONFIG._DIR_APP + '/js/' + name + '.js')) {
-            o.entry[name] = [_CONFIG._DIR_APP + '/js/' + name + '.js'];
+    arguments[1].map((value) => {
+        let name = value.split(/\./)[0];
+        if (fs.existsSync(_CONFIG._DIR_APP + "/js/" + name + ".js")) {
+            o.entry[name] = [_CONFIG._DIR_APP + "/js/" + name + ".js"];
         }
-        o.addVendor(name, 'html', value, _CONFIG._DIR_APP + '/' + value);
+        o.addVendor(name, "html", value, _CONFIG._DIR_APP + "/" + value);
         // o.plugins.push(
         //     new HtmlWebpackPlugin({
         //         filename: value,
-        //         template: _CONFIG._DIR_APP + '/' + value,
+        //         template: _CONFIG._DIR_APP + "/" + value,
         //     })
         // );
     });
 
     // remove exist dist folder.
-    _COMMON.removeDir(_CONFIG._DIR_BASE + '/dist');
+    // _COMMON.removeDir(_CONFIG._DIR_BASE + "/dist");
 
     // run webpack
-    Webpack(o, function(err, stats) {
+    Webpack(o, (err, stats) => {
         if (err) {
-            console.log('Error', err);
+            console.log("Error", err);
         } else {
-            cp.exec('cp ' + _CONFIG._DIR_APP + '/*.htm* ' + _CONFIG._DIR_BASE + '/dist');
+            cp.exec("cp " + _CONFIG._DIR_APP + "/*.htm* " + _CONFIG._DIR_BASE + "/dist");
             console.log(stats.toString({
                 chunks: false,
                 children: false,
-                colors: global._CONFIG._COLOR
+                colors: _CONFIG._COLOR
             }));
         }
     });

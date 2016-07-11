@@ -1,23 +1,27 @@
-var React = require('react');
+import React from "react";
 
-module.exports = React.createClass({
-    getInitialState: function() {
-        return {
-            className: ''
+export default class extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.handleClick = this.handleClick.bind(this);
+
+        this.state = {
+            className: ""
         };
-    },
-    render: function() {
-        var label, input;
+    }
+    render() {
+        let label, input;
         if (this.props.id.match(/^cb/)) {
             label = <label htmlFor={this.props.id} className={this.state.className}></label>;
             input = <input type="checkbox" id={this.props.id} onClick={this.handleClick} />;
         } else {
-            var checkedNum = 0;
-            var className = false;
+            let checkedNum = 0;
+            let className = false;
 
             if (this.props.data) {
-                for (var i = 0; i < this.props.data.length; i++) {
-                    for (var j = 0; j < this.props.checkbox.length; j++) {
+                for (let i = 0; i < this.props.data.length; i++) {
+                    for (let j = 0; j < this.props.checkbox.length; j++) {
                         if (this.props.data[i].id == this.props.checkbox[j]) {
                             checkedNum++;
                             break;
@@ -25,18 +29,18 @@ module.exports = React.createClass({
                     }
                 }
 
-                if (this.props.id == 'all') {
-                    className = '';
+                if (this.props.id == "all") {
+                    className = "";
                     if (checkedNum) {
                         if (this.props.data.length > checkedNum) {
-                            className = 'checkNotAll';
+                            className = "checkNotAll";
                         } else if (this.props.data.length == checkedNum) {
-                            className = 'checkAll';
+                            className = "checkAll";
                         }
                     }
                 }
             }
-            label = <label htmlFor={this.props.id} className={typeof className === 'string' ? className : this.props.className}></label>;
+            label = <label htmlFor={this.props.id} className={typeof className === "string" ? className : this.props.className}></label>;
             input = <input type="checkbox" id={this.props.id} onClick={this.handleClick.bind(this, this.props.id, className)} />;
         }
         return (
@@ -45,21 +49,21 @@ module.exports = React.createClass({
                 {input}
             </div>
         );
-    },
-    handleClick: function(id, className, e) {
+    }
+    handleClick(id, className, e) {
         if (this.props.id.match(/^cb/)) {
-            if (this.state.className == 'checked') {
+            if (this.state.className == "checked") {
                 this.setState({
-                    className: ''
+                    className: ""
                 });
             } else {
                 this.setState({
-                    className: 'checked'
+                    className: "checked"
                 });
             }
         } else {
             id = id.split(/\_/).length > 1 ? id.split(/\_/)[1] : id;
-            this.props.handleClick('checkbox', id, className);
+            this.props.handleClick("checkbox", id, className);
         }
     }
-});
+}

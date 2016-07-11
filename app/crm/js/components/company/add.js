@@ -1,28 +1,35 @@
-var React = require('react');
-var ReactRouter = require('react-router');
+import React from "react";
+import { Link, hashHistory } from "react-router";
 //action
-var AppActionCreators = require('../../actions/AppActionCreators')({});
-var CompanyActionCreators = require('../../actions/CompanyActionCreators');
+import CompanyActionCreators from "../../actions/CompanyActionCreators";
 //stores
-var CompanyStore = require('../../stores/CompanyStore');
-var UserStore = require('../../stores/UserStore');
+import CompanyStore from "../../stores/CompanyStore";
+import UserStore from "../../stores/UserStore";
 //custom
-var _COMMON = require('../../common');
+import _COMMON from "../../common";
 //jsx
-var Select = require('../element/Select');
+import Select from "../element/Select";
 
-module.exports = React.createClass({
-    mixins: [ReactRouter.History],
-    getInitialState: function() {
-        return CompanyStore.getData(false, true);
-    },
-    componentWillMount: function() {
+let CompanyAction = new CompanyActionCreators({
+    type1: "company"
+});
+
+export default class extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+
+        this.state = CompanyStore.getData(false, true);
+    }
+    componentWillMount() {
         CompanyStore.addChangeListener(this.handleChange);
-    },
-    componentWillUnmount: function() {
+    }
+    componentWillUnmount() {
         CompanyStore.removeChangeListener(this.handleChange);
-    },
-    render: function() {
+    }
+    render() {
         return (
             <div className="row">
 	            <div className="col-xs-12">
@@ -155,36 +162,36 @@ module.exports = React.createClass({
 				</div>
 			</div>
         );
-    },
-    handleChange: function(e) {
+    }
+    handleChange(e) {
         this.setState(CompanyStore.getData());
         if (this.state.bool) {
-            setTimeout(function() {
-                AppActionCreators.modal({
+            setTimeout(() => {
+                CompanyAction.modal({
                     display: true,
                     message: this.state.message,
                     button: [{
-                        type: 'ok',
-                        fn: function() {
-                            this.history.pushState(null, '/main/company');
-                            AppActionCreators.modal({
+                        type: "ok",
+                        fn: () => {
+                            hashHistory.push("/main/company");
+                            CompanyAction.modal({
                                 display: false
                             });
-                        }.bind(this)
+                        }
                     }]
                 });
-            }.bind(this), 1);
+            }, 1);
         }
-    },
-    handleSubmit: function(e) {
-        e.preventDefault();
-        var data = _COMMON.getInputData(this.refs);
-        if (data.name) {
-            data.user_id = UserStore.getData('profile').data.id;
-            CompanyActionCreators.add(data);
-        }
-    },
-    handleClick: function(e) {
-        this.history.pushState(null, '/main/company');
     }
-});
+    handleSubmit(e) {
+        e.preventDefault();
+        let data = _COMMON.getInputData(this.refs);
+        if (data.name) {
+            data.user_id = UserStore.getData("profile").data.id;
+            CompanyAction.add(data);
+        }
+    }
+    handleClick(e) {
+        hashHistory.push("/main/company");
+    }
+}

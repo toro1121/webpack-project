@@ -1,131 +1,135 @@
-var assign = require('object-assign');
+import assign from "object-assign";
 //constants
-var AppConstants = require('../constants/AppConstants');
+import AppConstants from "../constants/AppConstants";
 //dispatcher
-var AppDispatcher = require('../dispatcher/AppDispatcher');
+import AppDispatcher from "../dispatcher/AppDispatcher";
 //custom
-var _CONFIG = require('../config')();
+import config from "../config";
 
-module.exports = function(config) {
-    var o = {
-        ajax: function(options, actionType) {
-            options.url = _CONFIG._URL_API + options.url;
-            //如果env = develop
-            if (_CONFIG._ENV == 'develop') {
-                options.xhrFields = {
-                    withCredentials: true
-                };
-                options.data = assign({}, {
-                    env: _CONFIG._ENV
-                }, options.data);
-            }
-            $.ajax(assign({
-                type: 'GET',
-                dataType: 'json',
-                success: function(res) {
-                    if (actionType) {
-                        AppDispatcher.handleViewAction({
-                            actionType: actionType,
-                            res: res
-                        });
-                    }
-                }.bind(this)
-            }, options));
+let _CONFIG = config();
+
+export default class {
+    constructor(config) {
+        if (config) {
+            this.config = config;
+            this.TYPE = config.type1.toUpperCase();
+            this.config.type2 = typeof config.type2 != "undefined" ? config.type2 : false;
         }
-    };
-    if (typeof config.type1 == 'undefined') {
-        o.modal = function(data) {
-            AppDispatcher.handleViewAction({
-                actionType: AppConstants.MODAL_STATUS,
-                res: data
-            });
-        };
-    } else {
-        var TYPE = config.type1.toUpperCase();
-        o.data = function(id, tagId) {
-            if (id) {
-                this.ajax({
-                    url: '/' + config.type1 + '/' + id
-                }, AppConstants[TYPE + '_DATA_ONE']);
-            } else {
-                var setting = {
-                    url: '/' + config.type1
-                };
-                if (tagId) {
-                    setting.success = function(res) {
-                        res.tagId = tagId;
-                        AppDispatcher.handleViewAction({
-                            actionType: AppConstants[TYPE + '_DATA_ALL'],
-                            res: res
-                        });
-                    }
-                }
-                this.ajax(setting, AppConstants[TYPE + '_DATA_ALL']);
-            }
-        };
-        o.add = function(data) {
-            this.ajax({
-                type: 'POST',
-                url: '/' + config.type1,
-                data: data
-            }, AppConstants[TYPE + '_ADD']);
-        };
-        o.edit = function(data) {
-            this.ajax({
-                type: 'PUT',
-                url: '/' + config.type1 + '/' + data.id,
-                data: data
-            }, AppConstants[TYPE + '_EDIT']);
-        };
-        o.del = function(id) {
-            this.ajax({
-                type: 'DELETE',
-                url: '/' + config.type1 + '/' + id,
-                data: {
-                    id: id
-                }
-            }, AppConstants[TYPE + '_DATA_ALL']);
-        };
-        o.file = function(file) {
-            var data = new FormData();
-            data.append('file', file);
-            this.ajax({
-                type: 'POST',
-                cache: false,
-                processData: false,
-                contentType: false,
-                url: '/file',
-                data: data
-            });
-        };
-        o.sort = function(sortBy) {
-            AppDispatcher.handleViewAction({
-                actionType: AppConstants[TYPE + (config.type2 ? '_' + config.type2.toUpperCase() : '') + '_DATA_SORT'],
-                sortBy: sortBy
-            });
-        };
-        o.page = function(currentPage) {
-            AppDispatcher.handleViewAction({
-                actionType: AppConstants[TYPE + (config.type2 ? '_' + config.type2.toUpperCase() : '') + '_DATA_PAGE'],
-                currentPage: currentPage
-            });
-        };
-        o.filter = function(name, value) {
-            var v = typeof value === 'object' ? value.target.value : value;
-            AppDispatcher.handleViewAction({
-                actionType: AppConstants[TYPE + (config.type2 ? '_' + config.type2.toUpperCase() : '') + '_DATA_FILTER'],
-                name: name,
-                value: v
-            });
-        };
-        o.checkbox = function(id, className) {
-            AppDispatcher.handleViewAction({
-                actionType: AppConstants[TYPE + (config.type2 ? '_' + config.type2.toUpperCase() : '') + '_CHECKBOX'],
-                id: id,
-                className: className
-            });
-        };
-    }
 
-    return o;
-};
+        this.sort = this.sort.bind(this);
+        this.filter = this.filter.bind(this);
+    }
+    ajax(options, actionType) {
+        options.url = _CONFIG._URL_API + options.url;
+        //如果env = develop
+        // if (_CONFIG._ENV == "develop") {
+        //     options.xhrFields = {
+        //         withCredentials: true
+        //     };
+        //     options.data = assign({}, {
+        //         env: _CONFIG._ENV
+        //     }, options.data);
+        // }
+        $.ajax(assign({
+            type: "GET",
+            dataType: "json",
+            success: (res) => {
+                if (actionType) {
+                    AppDispatcher.handleViewAction({
+                        actionType: actionType,
+                        res: res
+                    });
+                }
+            }
+        }, options));
+    }
+    modal(data) {
+        AppDispatcher.handleViewAction({
+            actionType: AppConstants.MODAL_STATUS,
+            res: data
+        });
+    }
+    data(id, tagId) {
+        if (id) {
+            this.ajax({
+                url: "/" + this.config.type1 + "/" + id
+            }, AppConstants[this.TYPE + "_DATA_ONE"]);
+        } else {
+            let setting = {
+                url: "/" + this.config.type1
+            };
+            if (tagId) {
+                setting.success = (res) => {
+                    res.tagId = tagId;
+                    AppDispatcher.handleViewAction({
+                        actionType: AppConstants[this.TYPE + "_DATA_ALL"],
+                        res: res
+                    });
+                }
+            }
+            this.ajax(setting, AppConstants[this.TYPE + "_DATA_ALL"]);
+        }
+    }
+    add(data) {
+        this.ajax({
+            type: "POST",
+            url: "/" + this.config.type1,
+            data: data
+        }, AppConstants[this.TYPE + "_ADD"]);
+    }
+    edit(data) {
+        this.ajax({
+            type: "PUT",
+            url: "/" + this.config.type1 + "/" + data.id,
+            data: data
+        }, AppConstants[this.TYPE + "_EDIT"]);
+    }
+    del(id) {
+        this.ajax({
+            type: "DELETE",
+            url: "/" + this.config.type1 + "/" + id,
+            data: {
+                id: id
+            }
+        }, AppConstants[this.TYPE + "_DATA_ALL"]);
+    }
+    file(file) {
+        let data = new FormData();
+        data.append("file", file);
+        this.ajax({
+            type: "POST",
+            cache: false,
+            processData: false,
+            contentType: false,
+            url: "/file",
+            data: data
+        });
+    }
+    sort(sortBy) {
+        AppDispatcher.handleViewAction({
+            actionType: AppConstants[this.TYPE + (this.config.type2 ? "_" + this.config.type2.toUpperCase() : "") + "_DATA_SORT"],
+            sortBy: sortBy
+        });
+    }
+    page(currentPage) {
+        AppDispatcher.handleViewAction({
+            actionType: AppConstants[this.TYPE + (this.config.type2 ? "_" + this.config.type2.toUpperCase() : "") + "_DATA_PAGE"],
+            currentPage: currentPage
+        });
+    }
+    filter(name, value) {
+        let v = typeof value === "object" ? value.target.value : value;
+        AppDispatcher.handleViewAction({
+            actionType: AppConstants[this.TYPE + (this.config.type2 ? "_" + this.config.type2.toUpperCase() : "") + "_DATA_FILTER"],
+            name: name,
+            value: v
+        });
+    }
+    checkbox(id, className) {
+        AppDispatcher.handleViewAction({
+            actionType: AppConstants[this.TYPE + (this.config.type2 ? "_" + this.config.type2.toUpperCase() : "") + "_CHECKBOX"],
+            id: id,
+            className: className
+        });
+    }
+}

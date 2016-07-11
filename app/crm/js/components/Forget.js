@@ -1,17 +1,18 @@
-import React from 'react';
-import {
-    Link
-}
-from 'react-router';
+import React from "react";
+import { Link, hashHistory } from "react-router";
 //actions
-import UserActionCreators from '../actions/UserActionCreators';
+import UserActionCreators from "../actions/UserActionCreators";
 //stores
-import UserStore from '../stores/UserStore';
+import UserStore from "../stores/UserStore";
 //custom
-import _COMMON from '../common';
+import _COMMON from "../common";
 //jsx
-import Logo from './other/Logo';
-import Message from './other/Message';
+import Logo from "./other/Logo";
+import Message from "./other/Message";
+
+let UserAction = new UserActionCreators({
+    type1: "user"
+});
 
 export default class extends React.Component {
     constructor(props) {
@@ -51,7 +52,7 @@ export default class extends React.Component {
                             </div>
                         </div>
                     </form>
-                    <Link to={'/login'} className="text-center">回登入頁</Link>
+                    <Link to={"/login"} className="text-center">回登入頁</Link>
                 </div>
             </div>
         );
@@ -59,17 +60,17 @@ export default class extends React.Component {
     handleChange(e) {
         this.setState(UserStore.getData());
         if (this.state.bool) {
-            this.history.pushState(null, '/login');
+            hashHistory.push("/login");
         }
     }
     handleSubmit(e) {
         e.preventDefault();
 
-        var o = this.state;
-        var data = _COMMON.getInputData(this.refs);
+        let o = this.state;
+        let data = _COMMON.getInputData(this.refs);
 
-        var bool = true;
-        var i = 0;
+        let bool = true;
+        let i = 0;
         for (var key in data) {
             if (!data[key]) {
                 bool = false;
@@ -78,10 +79,10 @@ export default class extends React.Component {
             i++;
         }
         if (bool) {
-            UserActionCreators.userForget(data);
+            UserAction.userForget(data);
         } else {
-            o.message = '欄位填寫不完整!';
-            $('input:eq(' + i + ')').focus();
+            o.message = "欄位填寫不完整!";
+            $("input:eq(" + i + ")").focus();
         }
 
         this.setState(o);

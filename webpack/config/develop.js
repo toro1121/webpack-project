@@ -1,27 +1,30 @@
-var util = require('util'),
-    fs = require('fs'),
-    Webpack = require('webpack'),
+import fs from "fs";
+import util from "util";
+import Webpack from "webpack";
 
-    _CONFIG = require('../config'),
-    o = require('./base');
+import base from "./base";
+import server from "../server";
 
-module.exports = function() {
-    o.output.publicPath = util.format('http://%s:%d/', _CONFIG._HOST, _CONFIG._PORT);
+export default function() {
+    let _CONFIG = arguments[0];
+    let o = base(_CONFIG);
 
-    if (fs.existsSync(_CONFIG._DIR_APP + '/js/common.js')) {
-        o.entry.common.push(_CONFIG._DIR_APP + '/js/common');
+    o.output.publicPath = util.format("http://%s:%d/", _CONFIG._HOST, _CONFIG._PORT);
+
+    if (fs.existsSync(_CONFIG._DIR_APP + "/js/common.js")) {
+        o.entry.common.push(_CONFIG._DIR_APP + "/js/common");
     }
 
     // hot module replacement
-    o.entry.common.push(util.format('webpack-dev-server/client?http://%s:%d', _CONFIG._HOST, _CONFIG._PORT));
-    o.entry.common.push('webpack/hot/dev-server');
+    o.entry.common.push(util.format("webpack-dev-server/client?http://%s:%d", _CONFIG._HOST, _CONFIG._PORT));
+    o.entry.common.push("webpack/hot/dev-server");
     o.plugins.push(
         new Webpack.HotModuleReplacementPlugin()
     );
 
     o.module.loaders.push({
         test: /\.s(a|c)ss$/,
-        loader: 'style!css?sourceMap!postcss!sass?sourceMap',
+        loader: "style!css?sourceMap!postcss!sass?sourceMap",
         exclude: [
             new RegExp(_CONFIG._DIR_NODE),
             new RegExp(_CONFIG._DIR_BOWER),
@@ -29,7 +32,7 @@ module.exports = function() {
         ]
     }, {
         test: /\.css$/,
-        loader: 'style!css?sourceMap!postcss',
+        loader: "style!css?sourceMap!postcss",
         exclude: [
             new RegExp(_CONFIG._DIR_NODE),
             new RegExp(_CONFIG._DIR_BOWER),
@@ -38,20 +41,20 @@ module.exports = function() {
     });
 
     o.postcss = [
-        require('autoprefixer')({
-            browsers: ['last 10 versions']
+        require("autoprefixer")({
+            browsers: ["last 10 versions"]
         })
     ];
 
     // add html template
-    arguments[0].map(function(value) {
-        var name = value.split(/\./)[0];
-        if (fs.existsSync(_CONFIG._DIR_APP + '/js/' + name + '.js')) {
-            o.entry[name] = [_CONFIG._DIR_APP + '/js/' + name + '.js'];
+    arguments[1].map((value) => {
+        let name = value.split(/\./)[0];
+        if (fs.existsSync(_CONFIG._DIR_APP + "/js/" + name + ".js")) {
+            o.entry[name] = [_CONFIG._DIR_APP + "/js/" + name + ".js"];
         }
-        o.addVendor(name, 'html', value, _CONFIG._DIR_APP + '/' + value);
+        o.addVendor(name, "html", value, _CONFIG._DIR_APP + "/" + value);
     });
 
     // run webpack-dev-server
-    require('../server.js')(o);
+    return server(o);
 };

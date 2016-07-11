@@ -1,9 +1,14 @@
-var React = require('react');
+import React from "react";
 //custom
-var _CONFIG = require('../../config')();
+import config from "../../config";
 
-module.exports = React.createClass({
-    render: function() {
+let _CONFIG = config();
+
+export default class extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
         return (
             <footer className="main-footer">
 				<div className="pull-right hidden-xs">
@@ -19,4 +24,4 @@ module.exports = React.createClass({
 			</footer>
         );
     }
-});
+}

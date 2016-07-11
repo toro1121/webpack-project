@@ -1,5 +1,6 @@
-var assign = require('object-assign');
+import assign from "object-assign";
+// action
+import AppActionCreators from "./AppActionCreators";
 
-module.exports = assign(require('./AppActionCreators')({
-    type1: 'company'
-}), {});
+export default class extends AppActionCreators {
+}
