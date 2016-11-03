@@ -1,0 +1,7 @@
+$class-name:product-detail;
+.#{$class-name} {
+    &-control {
+        @extend .position-fixed;
+        top: 0;
+    }
+}

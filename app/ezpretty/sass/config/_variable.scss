@@ -1,0 +1,17 @@
+// color
+$white:#FFFFFF;
+$black:#000000;
+$red:#FF0000;
+$yellow:#FFF000;
+// font
+$color:("white":$white, "black":$black, "red":$red, "yellow":$yellow);
+$font-size:(9, 10, 12, 14, 20, 24, 28, 36);
+$font-weight:(normal, light, bold, bolder);
+// display
+$display:(inline, block, table, inline-block, inline-table, flex, none);
+// float
+$float:(none, left, right);
+// position
+$position:(static, relative, absolute, fixed);
+// text-align
+$text-align:(center, left, right);

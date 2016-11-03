@@ -5,14 +5,15 @@ import HtmlWebpackPlugin from "html-webpack-plugin";
 import ExtractTextPlugin from "extract-text-webpack-plugin";
 import OptimizeCssAssetsPlugin from "optimize-css-assets-webpack-plugin";
 
-import _COMMON from "../common";
+import common from "../common";
+let _COMMON = new common();
 import base from "./base";
 
 export default function() {
     let _CONFIG = arguments[0];
     let o = base(_CONFIG);
 
-    o.output.path = _CONFIG._DIR_BASE + "/dist";
+    o.output.path = _CONFIG._DIR_OUTPUT;
 
     if (fs.existsSync(_CONFIG._DIR_APP + "/js/common.js")) {
         o.entry.common.push(_CONFIG._DIR_APP + "/js/common");
@@ -64,7 +65,7 @@ export default function() {
         if (fs.existsSync(_CONFIG._DIR_APP + "/js/" + name + ".js")) {
             o.entry[name] = [_CONFIG._DIR_APP + "/js/" + name + ".js"];
         }
-        o.addVendor(name, "html", value, _CONFIG._DIR_APP + "/" + value);
+        // o.addVendor(name, "html", value, _CONFIG._DIR_APP + "/" + value);
         // o.plugins.push(
         //     new HtmlWebpackPlugin({
         //         filename: value,
@@ -74,14 +75,14 @@ export default function() {
     });
 
     // remove exist dist folder.
-    // _COMMON.removeDir(_CONFIG._DIR_BASE + "/dist");
+    _COMMON.removeDir(_CONFIG._DIR_OUTPUT);
 
     // run webpack
     Webpack(o, (err, stats) => {
         if (err) {
             console.log("Error", err);
         } else {
-            cp.exec("cp " + _CONFIG._DIR_APP + "/*.htm* " + _CONFIG._DIR_BASE + "/dist");
+            cp.exec("cp " + _CONFIG._DIR_APP + "/*.htm* " + _CONFIG._DIR_OUTPUT);
             console.log(stats.toString({
                 chunks: false,
                 children: false,

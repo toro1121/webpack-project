@@ -1,0 +1,10 @@
+$class-name:nav;
+.#{$class-name} {
+    ul {
+        @extend .w-100p;
+    }
+    li {
+        @extend .float-left;
+        @extend .text-align-center;
+    }
+}

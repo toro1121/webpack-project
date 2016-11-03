@@ -9,9 +9,10 @@ export default function() {
         contentBase: _CONFIG._DIR_APP,
         hot: true,
         inline: true,
-        quite: false,
+        quiet: true,
         noInfo: false,
         lazy: false,
+        historyApiFallback: true,
         // headers: {
         //     "Access-Control-Allow-Origin": "*"
         // },

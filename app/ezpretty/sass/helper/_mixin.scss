@@ -1,0 +1,22 @@
+@mixin custom-style($name, $data, $type:0) {
+    $px: ;
+    @if $name==font-size {
+        $px: px;
+    }
+    @if $type==1 {
+        @each $d in $data {
+            $key: nth($d, 1);
+            $value: nth($d, 2);
+            .#{$name}-#{$key} {
+                #{$name}: $value;
+            }
+        }
+    }
+    @else {
+        @each $d in $data {
+            .#{$name}-#{$d} {
+                #{$name}: $d#{$px};
+            }
+        }
+    }
+}

@@ -17,7 +17,9 @@ export default function() {
             filename: "js/[name].js"
         },
         resolve: {
-            alias: {},
+            alias: {
+                "react/lib/ReactMount": "react-dom/lib/ReactMount"
+            },
             extensions: ["", ".js", ".jsx", ".css", ".scss", ".sass"]
         },
         module: {
@@ -27,6 +29,12 @@ export default function() {
                 {
                     test: /\.htm(l)?$/,
                     loader: "html"
+                }, {
+                    test: /\.hbs$/,
+                    loader: "handlebars"
+                }, {
+                    test: /\.json/,
+                    loader: "json"
                 },
                 // css
                 {
@@ -35,6 +43,14 @@ export default function() {
                         publicPath: "../"
                     }),
                     include: [
+                        new RegExp(_CONFIG._DIR_NODE),
+                        new RegExp(_CONFIG._DIR_BOWER),
+                        new RegExp(_CONFIG._DIR_VENDOR)
+                    ]
+                }, {
+                    test: /\.styl$/,
+                    loader: "style!css?sourceMap!stylus",
+                    exclude: [
                         new RegExp(_CONFIG._DIR_NODE),
                         new RegExp(_CONFIG._DIR_BOWER),
                         new RegExp(_CONFIG._DIR_VENDOR)
@@ -138,6 +154,9 @@ export default function() {
         // watch: true,
         debug: true,
         devtool: "source-map",
+        node: {
+            fs: "empty" // avoids error messages
+        },
 
         //add vendor
         addVendor: function(entry, fileType, name, path) {

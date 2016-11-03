@@ -1,9 +1,12 @@
 import fs from "fs";
 import util from "util";
 import Webpack from "webpack";
+import Dashboard from "webpack-dashboard";
+import DashboardPlugin from "webpack-dashboard/plugin";
 
 import base from "./base";
 import server from "../server";
+
 
 export default function() {
     let _CONFIG = arguments[0];
@@ -18,8 +21,11 @@ export default function() {
     // hot module replacement
     o.entry.common.push(util.format("webpack-dev-server/client?http://%s:%d", _CONFIG._HOST, _CONFIG._PORT));
     o.entry.common.push("webpack/hot/dev-server");
+
+    let dashboard = new Dashboard();
     o.plugins.push(
-        new Webpack.HotModuleReplacementPlugin()
+        new Webpack.HotModuleReplacementPlugin(),
+        new DashboardPlugin(dashboard.setData)
     );
 
     o.module.loaders.push({

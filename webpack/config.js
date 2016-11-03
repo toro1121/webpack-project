@@ -11,12 +11,13 @@ export default function(config) {
 
         _APP: typeof config != "undefined" ? config._APP : null,
 
-        _COLOR: typeof config != "undefined" ? config._COLOR : null,
+        _COLOR: typeof config != "undefined" ? config._COLOR : null
     };
 
     _CONFIG = assign({}, _CONFIG, {
         _DIR_BASE: baseDir,
         _DIR_APP: baseDir + "/app" + (_CONFIG._APP ? "/" + _CONFIG._APP : ""),
+        _DIR_OUTPUT: path.resolve(baseDir, "./build"),
         // _DIR_NODE: baseDir + "/node_modules",
         // _DIR_BOWER: baseDir + "/bower_components",
         _DIR_NODE: "node_modules",

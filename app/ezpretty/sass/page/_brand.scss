@@ -1,0 +1,14 @@
+$class-name:brand;
+.#{$class-name} {
+    &-title {
+        @extend .text-align-center;
+    }
+    &-item {
+        @extend .p-10;
+        @extend .text-align-center;
+        border-bottom: 2px dashed #ccc;
+        &:last-child {
+            border: 0;
+        }
+    }
+}

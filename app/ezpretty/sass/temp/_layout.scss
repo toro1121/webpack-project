@@ -1,0 +1,21 @@
+* {
+    @extend .p-0;
+    @extend .m-0;
+    box-sizing: border-box;
+}
+
+html,
+body,
+.wrapper {
+    @extend .w-100p;
+    @extend .h-100p;
+}
+
+li {
+    list-style: none;
+}
+
+.wrapper {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}

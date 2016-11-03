@@ -1,0 +1,107 @@
+// width, height, line-height
+// @for $i from 0 through 1000 {
+//     @if $i <=100 {
+//         .w-#{$i} {
+//             width: #{$i}px;
+//         }
+//         .h-#{$i} {
+//             height: #{$i}px;
+//         }
+//         .line-height-#{$i} {
+//             line-height:#{$i}px;
+//         }
+//     }
+//     @else if $i % 10 {
+//         .w-#{$i} {
+//             width: #{$i}px;
+//         }
+//         .h-#{$i} {
+//             height: #{$i}px;
+//         }
+//     }
+// }
+@for $i from 1 through 100 {
+    @if $i <=20 {
+        .w-#{$i}p {
+            width: percentage($i / 100);
+        }
+        .h-#{$i}p {
+            height: percentage($i / 100);
+        }
+    }
+    @else if $i % 5 {
+        .w-#{$i}p {
+            width: percentage($i / 100);
+        }
+        .h-#{$i}p {
+            height: percentage($i / 100);
+        }
+    }
+}
+
+// padding, magin, line-height
+@for $i from 0 through 200 {
+    @if $i % 10 {
+        .p-#{$i} {
+            padding: #{$i}px;
+        }
+        .p-t-#{$i} {
+            padding-top: #{$i}px;
+        }
+        .p-r-#{$i} {
+            padding-right: #{$i}px;
+        }
+        .p-b-#{$i} {
+            padding-bottom: #{$i}px;
+        }
+        .p-l-#{$i} {
+            padding-left: #{$i}px;
+        }
+        .m-#{$i} {
+            margin: #{$i}px;
+        }
+        .m-t-#{$i} {
+            margin-top: #{$i}px;
+        }
+        .m-r-#{$i} {
+            margin-right: #{$i}px;
+        }
+        .m-b-#{$i} {
+            margin-bottom: #{$i}px;
+        }
+        .m-l-#{$i} {
+            margin-left: #{$i}px;
+        }
+    }
+}
+
+// border
+// @for $i from 0 through 200 {
+//     @if $i % 10 {
+//         .border-radius-#{$i} {
+//             border-radius: #{$i}px;
+//         }
+//     }
+// }
+// font
+@include custom-style(font-size, $font-size);
+@include custom-style(color, $color, 1);
+@include custom-style(font-weight, $font-weight);
+//
+@include custom-style(background-color, $color, 1);
+@include custom-style(display, $display);
+@include custom-style(float, $float);
+@include custom-style(position, $position);
+@include custom-style(text-align, $text-align);
+// other
+.margin-auto {
+    margin: 0 auto;
+}
+
+.clear {
+    &::after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+}
